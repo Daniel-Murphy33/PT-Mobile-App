@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "slug": "frontend",
+    "name": "frontend",
+    "sdkVersion": "47.0.0",
+    "extra": {
+      "eas": {
+        "projectId": "61a2255f-c941-493b-bc89-c2f84987438f"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "fitness-bro"
+    }
+  },
+  "name": "frontend"
+}
