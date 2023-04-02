@@ -1,14 +1,142 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-const CreatedNutrition = () => {
+const CreatedNutritionScreen = ({ route }) => {
+  const { date, notes, meals, id, name } = route.params;
+  const navigation = useNavigation();
+
   return (
-    <View>
-      <Text>CreatedNutrition</Text>
-    </View>
-  )
-}
+    <ScrollView style={styles.container}>
+      <View style={styles.arrowContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons
+            name="arrow-back"
+            size={30}
+            color="#0792F9"
+            style={styles.arrow}
+          />
+        </TouchableOpacity>
+      </View>
 
-export default CreatedNutrition
+      <View style={styles.header}>
+        <Text style={styles.mealPlanName}>{name}</Text>
+        <View style={styles.dateContainer}>
+          <MaterialCommunityIcons
+            name="calendar-today"
+            size={20}
+            color="black"
+          />
+          <Text style={styles.date}>{date}</Text>
+        </View>
+      </View>
+      <View style={styles.mealSection}>
+        {meals.map((meal, index) => (
+          <View key={index} style={styles.mealCard}>
+            <Text style={styles.mealTitle}>Meal {index + 1}</Text>
+            <View key={index} style={styles.foodItem}>
+              <Text style={styles.foodName}>{meal.name}</Text>
+              <Text style={styles.foodDetails}>
+                {meal.calories} kcal | {meal.protein}g protein |{" "}
+                {meal.carbohydrates}g carbs | {meal.fat}g fats
+              </Text>
+            </View>
+          </View>
+        ))}
+      </View>
+      <View style={styles.notesSection}>
+        <Text style={styles.notesTitle}>Notes:</Text>
+        <Text style={styles.notesContent}>{notes}</Text>
+      </View>
+    </ScrollView>
+  );
+};
 
-const styles = StyleSheet.create({})
+export default CreatedNutritionScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F2F2F2",
+    paddingHorizontal: 20,
+  },
+  header: {
+    marginTop: 50,
+    alignItems: "center",
+  },
+  mealPlanName: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  dateContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  date: {
+    marginLeft: 8,
+    fontSize: 18,
+  },
+  mealSection: {
+    marginTop: 20,
+  },
+  mealCard: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  mealTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  foodItem: {
+    marginBottom: 8,
+  },
+  foodName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  foodDetails: {
+    fontSize: 14,
+    color: "#888",
+  },
+  notesSection: {
+    marginBottom: 32,
+  },
+  notesTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  notesContent: {
+    fontSize: 16,
+  },
+  arrow: {
+    position: "absolute",
+    marginTop: 50,
+    marginLeft: 10,
+  },
+  arrowContainer: {
+    zIndex: 1,
+  }
+  
+});

@@ -32,10 +32,7 @@ const renderRightActions = (progress, dragX, item) => {
     outputRange: [0, 0, 0, 1],
   });
   return (
-    <TouchableOpacity
-      style={styles.deleteBtn}
-      onPress={() => DeleteUser(item)}
-    >
+    <TouchableOpacity style={styles.deleteBtn} onPress={() => DeleteUser(item)}>
       <Ionicons name="trash-bin" size={40} color="red" />
       <Animated.Text
         style={[
@@ -55,15 +52,15 @@ const DeleteUser = (item) => {
   const user = getAuth().currentUser;
 
   Alert.alert(
-    'Delete Account',
-    'Are you sure you want to delete this workout?',
+    "Delete Account",
+    "Are you sure you want to delete this workout?",
     [
       {
-        text: 'Cancel',
-        style: 'cancel',
+        text: "Cancel",
+        style: "cancel",
       },
       {
-        text: 'Delete',
+        text: "Delete",
         onPress: () => {
           const docRef = doc(db, "users", user.uid, "workouts", item.key);
           deleteDoc(docRef);
@@ -75,8 +72,6 @@ const DeleteUser = (item) => {
 };
 
 const WorkoutCards = () => {
-
-
   const user = getAuth().currentUser;
   const [workouts, setWorkouts] = useState([]);
   const navigation = useNavigation();
@@ -105,44 +100,44 @@ const WorkoutCards = () => {
   }, []);
 
   return (
-    <View style={{ height: "90%" }}>
-      {/* List for rendering items  */}
+    <View style={styles.container}>
       <FlatList
         data={workouts}
         key={(item) => item.id}
-        style={{ flex: 1, overflow: "scroll" }} 
+        style={{ flex: 1, overflow: "scroll" }}
         renderItem={({ item }) => (
-          <View>
+          <View style={styles.cardContainer}>
             <Swipeable
-
               renderRightActions={(progress, dragX) =>
                 renderRightActions(progress, dragX, item)
               }
             >
-            <TouchableOpacity
-              style={styles.exerciseContainer}
-              onPress={() =>
-                navigation.navigate("CreatedWorkout", {
-                  day: item.day,
-                  exercises: item.exercises,
-                  id: item.id,
-                  name: item.name,
-                  trainingType: item.trainingType,
-                  notes: item.notes,
-                })
-              }
-            >
-              <Text style={styles.title}>{item.day}</Text>
-              <Text style={styles.exerciseSetsReps}>
-                {item.name} - {item.trainingType}
-              </Text>
-              {item.exercises.map((exercise, index) => (
-                <Text key={index} style={styles.exerciseSetsReps}>
-                  {exercise.name} - Sets x{exercise.sets} - Reps x
-                  {exercise.reps}
-                </Text>
-              ))}
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() =>
+                  navigation.navigate("CreatedWorkout", {
+                    day: item.day,
+                    exercises: item.exercises,
+                    id: item.id,
+                    name: item.name,
+                    trainingType: item.trainingType,
+                    notes: item.notes,
+                  })
+                }
+              >
+                <View style={styles.header}>
+                  <Text style={styles.workoutName}>{item.name}</Text>
+                  <MaterialCommunityIcons
+                    name="dumbbell"
+                    size={24}
+                    color="black"
+                  />
+                </View>
+                <View style={styles.typeContainer}>
+                  <Text style={styles.trainingType}>{item.trainingType}</Text>
+                  <Text style={styles.day}>{item.day}</Text>
+                </View>
+              </TouchableOpacity>
             </Swipeable>
           </View>
         )}
@@ -154,12 +149,23 @@ const WorkoutCards = () => {
 export default WorkoutCards;
 
 const styles = StyleSheet.create({
-  exerciseContainer: {
-    backgroundColor: "#fff",
-    padding: 20,
+  container: {
+    flex: 1,
+    backgroundColor: "#F2F2F2",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  cardContainer: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
     marginVertical: 8,
     marginHorizontal: 16,
-    borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -169,22 +175,33 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  title: {
-    fontSize: 25,
-    fontWeight: "bold",
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 16,
   },
-  exerciseSetsReps: {
-    fontSize: 16.5,
-    color: "gray",
-    marginTop: 5,
+  workoutName: {
+    fontSize: 20,
     fontWeight: "bold",
+    marginBottom: 8,
   },
-  deleteBtn:{
-    justifyContent:'center',
-  }, 
+  typeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  trainingType: {
+    fontSize: 16,
+  },
+  day: {
+    fontSize: 16,
+  },
+  deleteBtn: {
+    justifyContent: "center",
+  },
   deleteText: {
     marginRight: 15,
-    fontWeight:'bold',
+    fontWeight: "bold",
     fontSize: 12,
-  }, 
+  },
 });

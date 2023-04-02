@@ -20,6 +20,7 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
+
 const WorkoutScreen = () => {
   const navigation = useNavigation();
   const user = getAuth().currentUser;
@@ -59,7 +60,7 @@ const WorkoutScreen = () => {
         <MaterialIcons
           style={styles.icon}
           name="fitness-center"
-          size={35}
+          size={45}
           color="#0792F9"
         />
         <Text style={styles.subTitle}>Add Workout Template</Text>
@@ -70,7 +71,7 @@ const WorkoutScreen = () => {
           <Text style={styles.btnText}>Create Workout Template</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.ViewWorkoutBtn} 
+          style={styles.ViewWorkoutBtn}
           onPress={() => navigation.navigate("AllWorkout")}
         >
           <Text style={styles.btnText}>View Created Workouts</Text>
@@ -84,7 +85,7 @@ const WorkoutScreen = () => {
           </TouchableOpacity>
         )}
       </View>
-      <View style={{ height: "62%", marginTop: 60 }}>
+      <View style={{ flex: 1, marginTop: 60 }}>
         <RecentWorkoutCard style={styles.card} />
       </View>
     </SafeAreaView>
@@ -100,44 +101,36 @@ const styles = StyleSheet.create({
     marginTop: 45,
     height: "90%",
   },
-  card: {},
   title: {
     textAlign: "left",
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: "bold",
-    top: 40,
-    left: 25,
-  },
-  title2: {
-    textAlign: "left",
-    fontSize: 30,
-    fontWeight: "bold",
-    top: 55,
+    top: 45,
     left: 25,
   },
   subTitle: {
     textAlign: "left",
     fontSize: 20,
-    top: 40,
-    left: 25,
+    marginTop: 20,
+    marginLeft: 25,
   },
   icon: {
     alignSelf: "center",
-    left: 120,
-    top: 5,
+    marginLeft: 240,
+    marginTop: 5,
+    marginBottom: 10,
   },
   createWorkoutBtn: {
     alignSelf: "center",
-    top: 70,
+    marginTop: 40,
     backgroundColor: "#0792F9",
     width: "80%",
     height: 30,
     borderRadius: 20,
-    margin: 23,
   },
   ViewWorkoutBtn: {
     alignSelf: "center",
-    top: 55,
+    marginTop: 30,
     backgroundColor: "#0792F9",
     width: "80%",
     height: 30,

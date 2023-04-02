@@ -91,22 +91,21 @@ const RecentWorkoutCard = () => {
   }, []);
 
   return (
-    <View style={{ height: "90%" }}>
-      <Text style={styles.title2}>Recently Created Plans</Text>
-      {/* List for rendering items  */}
+    <View style={styles.container}>
+      <Text style={styles.title}>Recent Meal Plans</Text>
+      {/* List for rendering items */}
       <FlatList
         data={nutrition}
         keyExtractor={(item) => item.key}
-        style={{ flex: 1, overflow: "scroll" }}
+        style={{ flex: 1, overflow: "scroll",}}
         renderItem={({ item }) => (
           <Swipeable
-            style={{ height: "90%" }}
             renderRightActions={(progress, dragX) =>
               renderRightActions(progress, dragX, item)
             }
           >
             <TouchableOpacity
-              style={styles.exerciseContainer}
+              style={styles.cardContainer}
               onPress={() =>
                 navigation.navigate("CreatedNutrition", {
                   date: item.date,
@@ -117,69 +116,66 @@ const RecentWorkoutCard = () => {
                 })
               }
             >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text style={styles.title}>
-                  {item.mealPlanName} - {item.date}
-                </Text>
-                <MaterialCommunityIcons
-                  name="food-fork-drink"
-                  size={30}
-                  color="black"
-                />
+              <View style={styles.card}>
+                <Text style={styles.mealPlanName}>{item.mealPlanName}</Text>
+                <View style={styles.dateContainer}>
+                  <MaterialCommunityIcons
+                    name="calendar-month"
+                    size={16}
+                    color="gray"
+                  />
+                  <Text style={styles.date}>{item.date}</Text>
+                </View>
               </View>
             </TouchableOpacity>
           </Swipeable>
         )}
       />
     </View>
-  );
-};
+  )};
+  
 
 export default RecentWorkoutCard;
 
 const styles = StyleSheet.create({
-  exerciseContainer: {
+  container: {
+    flex: 1,
     backgroundColor: "#fff",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderRadius: 10,
-    shadowColor: "#000",
-    height: 90,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    paddingBottom: 10,
+    height: '90%',
   },
   title: {
     fontSize: 25,
     fontWeight: "bold",
-  },
-  title2: {
-    fontSize: 25,
-    fontWeight: "bold",
+    marginBottom: 20,
     marginLeft: 20,
   },
-  exerciseSetsReps: {
-    fontSize: 16.5,
-    color: "gray",
-    marginTop: 5,
-    fontWeight: "bold",
+  cardContainer: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderColor: "black",
+    marginLeft: 20,
+    marginRight: 20,
   },
-  deleteBtn: {
-    justifyContent: "center",
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 18,
   },
-  deleteText: {
-    marginRight: 15,
+  mealPlanName: {
+    fontSize: 20,
     fontWeight: "bold",
-    fontSize: 12,
+    marginBottom: 8,
+    color: "#333",
+  },
+  dateContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  date: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: "#333",
   },
 });

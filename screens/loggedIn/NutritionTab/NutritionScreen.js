@@ -5,19 +5,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
 import { collection, db, doc } from "../../../firebase";
-import {
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-} from "firebase/firestore";
+import { getDoc, getDocs, limit, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import RecentNutritionCard from '../../../components/RecentNutritionCards'
+import RecentNutritionCard from "../../../components/RecentNutritionCards";
 
 const NutritionScreen = () => {
   const navigation = useNavigation();
@@ -35,7 +29,7 @@ const NutritionScreen = () => {
 
       const sub = await getDocs(q);
       sub.forEach((subs) => {
-        console.log("Hello",subs.data());
+        console.log("Hello", subs.data());
       });
     }
   };
@@ -69,7 +63,7 @@ const NutritionScreen = () => {
           <Text style={styles.btnText}>Create Meal Plan</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.ViewWorkoutBtn} 
+          style={styles.ViewWorkoutBtn}
           onPress={() => navigation.navigate("AllNutrition")}
         >
           <Text style={styles.btnText}>View Created Plans</Text>
@@ -83,7 +77,7 @@ const NutritionScreen = () => {
           </TouchableOpacity>
         )}
       </View>
-      <View style={{ height: "90%", marginTop: 60 }}>
+      <View style={{ flex: 1, marginTop: 60 }}>
         <RecentNutritionCard style={styles.card} />
       </View>
     </SafeAreaView>

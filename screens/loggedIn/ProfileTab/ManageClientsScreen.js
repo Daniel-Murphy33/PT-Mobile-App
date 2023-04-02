@@ -21,18 +21,6 @@ const ManageClientsScreen = () => {
 
   const [clients, setClients] = useState("");
 
-  const CLIENTS = [
-    { id: 1, name: "John Doe", email: "john.doe@example.com" },
-    { id: 2, name: "Jane Smith", email: "jane.smith@example.com" },
-    { id: 3, name: "Bob Johnson", email: "bob.johnson@example.com" },
-    { id: 4, name: "John Doe", email: "john.doe@example.com" },
-    { id: 5, name: "Jane Smith", email: "jane.smith@example.com" },
-    { id: 6, name: "Bob Johnson", email: "bob.johnson@example.com" },
-    { id: 7, name: "John Doe", email: "john.doe@example.com" },
-    { id: 8, name: "Jane Smith", email: "jane.smith@example.com" },
-    { id: 9, name: "Bob Johnson", email: "bob.johnson@example.com" },
-    // Add more clients as needed
-  ];
 
   // getting from firestore
 const GetClients = async () => {

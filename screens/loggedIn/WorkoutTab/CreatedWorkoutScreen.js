@@ -6,7 +6,8 @@ const CreatedWorkout = ({ route, navigation }) => {
   const { day, exercises, name, trainingType, notes } = route.params;
 
   const handleExercisePress = (exercise) => {
-    navigation.navigate("CreatedExerciseScreen", { exercise });
+    const currentIndex = exercises.findIndex((item) => item.id === exercise.id);
+    navigation.navigate("CreatedExerciseScreen", { exercise, exercises, currentIndex });
   };
 
   return (
@@ -25,7 +26,7 @@ const CreatedWorkout = ({ route, navigation }) => {
         {exercises.map((exercise, index) => (
           <TouchableOpacity key={index} style={styles.exerciseContainer} onPress={() => handleExercisePress(exercise)}>
             <Text style={styles.exerciseTitle}>Exercise {index + 1} - {exercise.name}</Text>
-            <Text style={styles.exerciseInfo}>Sets x{exercise.sets} - Reps x{exercise.reps} - Weight: {exercise.weight}</Text>
+            <Text style={styles.exerciseInfo}>Sets x{exercise.sets} | Reps x{exercise.reps} | Weight: {exercise.weight}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -43,7 +44,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 25,
-    backgroundColor: "#fff",
+    backgroundColor: "#F2F2F2",
+    marginTop: 20,
   },
   headerContainer: {
     flexDirection: "row",
@@ -52,49 +54,68 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
   header: {
-    fontSize: 35,
+    fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
     flex: 1,
     marginLeft: 10,
-    marginTop: 13,
   },
   workoutContainer: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
-    marginVertical: 5,
+    marginVertical: 15,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   workoutTitle: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
   },
   exerciseContainer: {
-    marginVertical: 20,
+    width: "100%",
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+    paddingBottom: 15,
+    marginBottom: 25,
   },
   exerciseTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
+    marginBottom: 5,
   },
   exerciseInfo: {
-    fontSize: 14,
-    textAlign: "center",
-    marginTop: 5,
+    fontSize: 16,
+    marginLeft: 20,
   },
   notesContainer: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
-    marginVertical: 5,
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   notesTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
   },
   notesText: {
-    fontSize: 14,
+    fontSize: 16,
   },
 });

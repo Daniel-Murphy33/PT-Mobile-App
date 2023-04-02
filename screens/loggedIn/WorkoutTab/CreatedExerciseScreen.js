@@ -16,7 +16,7 @@ import { useEffect } from "react";
 
 const CreatedExerciseScreen = ({ route }) => {
   //gets params from last page
-  const { exercise } = route.params;
+  const { exercise, exercises, currentIndex } = route.params;
   const navigation = useNavigation();
   const [videoId, setVideoId] = useState("");
   console.log(exercise.videoLink);
@@ -28,12 +28,26 @@ const CreatedExerciseScreen = ({ route }) => {
     }
   };
 
+  const handleNextExercise = () => {
+    if (currentIndex < exercises.length - 1) {
+      navigation.push("CreatedExerciseScreen", {
+        exercise: exercises[currentIndex + 1],
+        exercises,
+        currentIndex: currentIndex + 1,
+      });
+    }
+  };
+
+  const handlePreviousExercise = () => {
+    navigation.goBack();
+  };
+
   useEffect(() => {
     extractId();
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       {videoId ? (
         <YoutubePlayer height={300} play={false} videoId={videoId} />
       ) : (
@@ -43,17 +57,29 @@ const CreatedExerciseScreen = ({ route }) => {
       <Text style={styles.title}>{exercise.name}</Text>
       <Text style={styles.sets}>x{exercise.sets} Sets</Text>
       <Text style={styles.sets}>x{exercise.reps} Reps</Text>
-      <KeyboardAvoidingView></KeyboardAvoidingView>
-      <TouchableOpacity style={styles.doneBtn} onPress={extractId}>
-        <Text style={styles.btnText}>Save</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.prevBtn}
+          onPress={handlePreviousExercise}
+        >
+          <Text style={styles.btnText}>PREVIOUS</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.doneBtn}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.btnText}>BACK</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.nextBtn} onPress={handleNextExercise}>
+          <Text style={styles.btnText}>NEXT</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.exitBtn}
+          onPress={() => navigation.goBack()}
+        >
+          <Text
+            style={styles.btnText}
+            onPress={() => navigation.navigate("AllWorkout")}
+          >
+            EXIT
+          </Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -61,55 +87,64 @@ const CreatedExerciseScreen = ({ route }) => {
 export default CreatedExerciseScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F2F2F2",
+  },
   image: {
     width: "100%",
-    height: 370,
+    height: 300,
     backgroundColor: "black",
   },
   title: {
-    marginLeft: "auto",
-    marginRight: "auto",
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 20,
+    marginBottom: 10,
   },
   sets: {
-    marginLeft: "auto",
-    marginRight: "auto",
-    fontSize: 36,
-    top: 25,
+    fontSize: 24,
+    textAlign: "center",
+    marginBottom: 10,
   },
   video: {
     top: 20,
   },
   doneBtn: {
     backgroundColor: "#0792F9",
-    marginLeft: "auto",
-    marginRight: "auto",
     marginTop: 20,
     borderRadius: 18,
     padding: 10,
-    top: 155,
     width: 140,
+    alignSelf: "center",
+  },
+  buttonContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
   },
   prevBtn: {
     backgroundColor: "#4682B4",
-    marginLeft: "auto",
-    marginRight: "auto",
     borderRadius: 18,
     padding: 10,
     width: 140,
-    right: 90,
+    marginBottom: 20,
   },
   nextBtn: {
     backgroundColor: "#4682B4",
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: 20,
     borderRadius: 18,
     padding: 10,
     width: 140,
-    left: 90,
-    bottom: 58,
+    marginTop: 20,
+  },
+  exitBtn: {
+    backgroundColor: "#FF0000",
+    borderRadius: 18,
+    padding: 10,
+    width: 140,
+    marginTop: 20,
   },
   btnText: {
     textAlign: "center",

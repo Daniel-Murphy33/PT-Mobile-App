@@ -148,7 +148,7 @@ const FormOne = () => {
 
             {exercises.map((meal, index) => (
               <View key={index} style={styles.formBox}>
-                <Text style={styles.sectionTitle}>Exercise {index + 1}</Text>
+                <Text style={styles.label}>Exercise {index + 1}: </Text>
 
                 <TextInput
                   style={styles.input}
@@ -183,7 +183,7 @@ const FormOne = () => {
                 />
 
                 <TextInput
-                  style={styles.weightInput}
+                  style={styles.input}
                   placeholder="Enter weight..."
                   placeholderTextColor={"grey"}
                   value={meal.weight}
@@ -340,7 +340,7 @@ const FormTwo = () => {
 
             {meals.map((meal, index) => (
               <View key={index} style={styles.formBox}>
-                <Text style={styles.sectionTitle}>Meal {index + 1}</Text>
+                <Text style={styles.label}>Meal {index + 1}:</Text>
 
                 <TextInput
                   style={styles.input}
@@ -477,12 +477,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    margin: 20,
-  },
+  
   scrollViewContent: {
     flexGrow: 1,
     justifyContent: "center",
