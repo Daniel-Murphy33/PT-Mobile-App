@@ -64,30 +64,30 @@ const AddWorkoutScreen = () => {
 
   //Create in Firesotre
   const AddWorkout = async () => {
-    const user = getAuth().currentUser;
-    if (user) {
-      try {
-        const docRef = doc(db, "users", user.uid);
-        const colRef = collection(docRef, "workouts");
-        addDoc(colRef, {
-          day: day,
-          name: name,
-          trainingType: value,
-          exercises: exercises,
-          notes: notes,
-          createdAt: serverTimestamp(),
-        });
-      } catch (e) {
-        console.log(e);
-      }
-
+  const user = getAuth().currentUser;
+  if (user) {
+    try {
+      const docRef = doc(db, "users", user.uid);
+      const colRef = collection(docRef, "workouts");
+      await addDoc(colRef, {
+        day: day,
+        name: name,
+        trainingType: value,
+        exercises: exercises,
+        notes: notes,
+        createdAt: serverTimestamp(),
+      });
       setDay("");
       setName("");
       setExercises([{ name: "" }]);
       setNotes("");
       console.log(exercises);
+    } catch (e) {
+      console.log(e);
     }
-  };
+  }
+};
+
 
   return (
     <SafeAreaView style={styles.container}>

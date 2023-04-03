@@ -30,22 +30,22 @@ const ProfileScreen = () => {
 
   const DeleteUser = () => {
     Alert.alert(
-      'Delete Account',
-      'Are you sure you want to delete this account? All of your data will be lost.',
+      "Delete Account",
+      "Are you sure you want to delete this account? All of your data will be lost.",
       [
         {
-          text: 'Cancel',
-          style: 'cancel',
+          text: "Cancel",
+          style: "cancel",
         },
         {
-          text: 'Delete',
+          text: "Delete",
           onPress: () => {
             deleteUser(userCred)
               .then(() => {
-                console.log('Deleted', userCred);
+                console.log("Deleted", userCred);
               })
               .catch((error) => {
-                console.log('error:', error);
+                console.log("error:", error);
               });
           },
         },
@@ -74,11 +74,19 @@ const ProfileScreen = () => {
       }}
     >
       <TouchableOpacity style={styles.delete} onPress={DeleteUser}>
-        <Text style={{ marginTop: 50, fontWeight: 'bold', }}>Delete Account</Text>
+        <Text style={{ marginTop: 50, fontWeight: "bold" }}>
+          Delete Account
+        </Text>
         <Entypo
           name="remove-user"
           size={40}
-          style={{ color: 'darkred', marginTop: 20, position: "absolute", right: 10, top: 50 }}
+          style={{
+            color: "darkred",
+            marginTop: 20,
+            position: "absolute",
+            right: 10,
+            top: 50,
+          }}
         />
       </TouchableOpacity>
       <Text style={styles.userName}>Profile</Text>
@@ -86,17 +94,31 @@ const ProfileScreen = () => {
         style={styles.userImg}
         source={require("../../../assets/TAG.png")}
       />
-      <Text style={styles.userName}>
-        {user.firstName} {user.lastName}
-      </Text>
-      <Text style={styles.aboutUser}>Email : {userCred.email}</Text>
-      <Text style={styles.aboutUser}>Age : {user.age}</Text>
-      <Text style={styles.aboutUser}>
-        Current Weight : {user.currentWeight}
-      </Text>
-      <Text style={styles.aboutUser}>Goal Weight : {user.goalWeight}</Text>
+      <View style={styles.userCard}>
+  <Text style={styles.userName}>
+    {user.firstName} {user.lastName}
+  </Text>
+  <Text style={styles.aboutUser}>
+    <Text style={styles.aboutUserLabel}>Email:</Text> {userCred.email}
+  </Text>
+  <Text style={styles.aboutUser}>
+    <Text style={styles.aboutUserLabel}>Age:</Text> {user.age}
+  </Text>
+  <Text style={styles.aboutUser}>
+    <Text style={styles.aboutUserLabel}>Current Weight:</Text> {user.currentWeight}
+  </Text>
+  <Text style={styles.aboutUser}>
+    <Text style={styles.aboutUserLabel}>Goal Weight:</Text> {user.goalWeight}
+  </Text>
+</View>
+
       <View style={styles.userBtnWrapper}>
-        <TouchableOpacity style={styles.userBtn} onPress={() => {navigation.navigate("EditUser")}}>
+        <TouchableOpacity
+          style={styles.userBtn}
+          onPress={() => {
+            navigation.navigate("EditUser");
+          }}
+        >
           <Text style={styles.userBtnTxt}>Edit Profile</Text>
         </TouchableOpacity>
         {user.role === "trainer" && (
@@ -168,18 +190,34 @@ const styles = StyleSheet.create({
     width: 150,
     borderRadius: 75,
   },
+  userCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    padding: 25,
+    marginTop: 20,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
   userName: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 15,
+    textAlign: "center",
   },
   aboutUser: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#666",
-    textAlign: "center",
-    marginBottom: 10,
+    flexDirection: "row",
+    fontSize: 14,
+    marginBottom: 12,
+  },
+  aboutUserLabel: {
+    fontWeight: "bold",
   },
   userBtnWrapper: {
     flexDirection: "row",

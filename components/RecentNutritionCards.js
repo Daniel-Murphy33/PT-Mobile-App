@@ -178,4 +178,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
   },
+  deleteBtn: {
+    justifyContent: 'center',
+  },
+  deleteText: {
+    marginRight: 15,
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
 });
