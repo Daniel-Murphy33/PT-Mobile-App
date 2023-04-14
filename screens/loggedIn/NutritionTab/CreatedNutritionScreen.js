@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 const CreatedNutritionScreen = ({ route }) => {
   const { date, notes, meals, id, name } = route.params;
   const navigation = useNavigation();
+  console.log(id);
 
   return (
     <ScrollView style={styles.container}>
@@ -39,11 +40,25 @@ const CreatedNutritionScreen = ({ route }) => {
         </View>
       </View>
       <View style={styles.mealSection}>
+      <TouchableOpacity
+      style={styles.editButton}
+        onPress={() =>
+          navigation.navigate("EditNutrition", {
+            date,
+            name,
+            meals,
+            notes,
+            id,
+          })
+        }
+      >
+        <Text style={styles.editButtonText}>Edit Meal Plan</Text>
+      </TouchableOpacity>
         {meals.map((meal, index) => (
           <View key={index} style={styles.mealCard}>
             <Text style={styles.mealTitle}>Meal {index + 1}</Text>
             <View key={index} style={styles.foodItem}>
-              <Text style={styles.foodName}>{meal.name}</Text>
+              <Text style={styles.foodName}>{meal.name} - {meal.servingSize}</Text>
               <Text style={styles.foodDetails}>
                 {meal.calories} kcal | {meal.protein}g protein |{" "}
                 {meal.carbohydrates}g carbs | {meal.fat}g fats
@@ -52,7 +67,7 @@ const CreatedNutritionScreen = ({ route }) => {
           </View>
         ))}
       </View>
-      <View style={styles.notesSection}>
+      <View style={styles.notesContainer}>
         <Text style={styles.notesTitle}>Notes:</Text>
         <Text style={styles.notesContent}>{notes}</Text>
       </View>
@@ -77,6 +92,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 8,
     textAlign: "center",
+  },
+  editButton: {
+    backgroundColor: "#0792F9",
+    borderRadius: 10,
+    padding: 5,
+    marginTop: 10,
+    alignSelf: "flex-start",
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  editButtonText: {
+    textAlign: 'center',
+    color: "white",
   },
   dateContainer: {
     flexDirection: "row",
@@ -137,6 +166,20 @@ const styles = StyleSheet.create({
   },
   arrowContainer: {
     zIndex: 1,
-  }
+  },
+  notesContainer: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
   
 });

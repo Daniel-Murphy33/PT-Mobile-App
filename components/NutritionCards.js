@@ -105,7 +105,6 @@ const NutritionCards = () => {
     GetNutrition();
   }, []);
 
-
   return (
     <View style={styles.container}>
       <FlatList
@@ -126,7 +125,7 @@ const NutritionCards = () => {
                     date: item.date,
                     notes: item.notes,
                     meals: item.meals,
-                    id: item.id,
+                    id: item.key,
                     name: item.mealPlanName,
                   })
                 }

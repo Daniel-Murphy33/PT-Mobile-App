@@ -116,7 +116,12 @@ const ProfileScreen = () => {
         <TouchableOpacity
           style={styles.userBtn}
           onPress={() => {
-            navigation.navigate("EditUser");
+            navigation.navigate("EditUser", {
+              email : userCred.email,
+              firstName: user.firstName,
+              lastName : user.lastName
+
+            });
           }}
         >
           <Text style={styles.userBtnTxt}>Edit Profile</Text>

@@ -56,7 +56,7 @@ useEffect(() => {
         style={styles.addClientBtn}
         onPress={() => navigation.navigate("AddClients")}
       >
-        <Text style={styles.addClientBtnTxt}>Add Clients</Text>
+        <Text style={styles.addClientBtnTxt}>Add Client / Team</Text>
       </TouchableOpacity>
       <Text style={styles.title}>All Clients</Text>
       <FlatList

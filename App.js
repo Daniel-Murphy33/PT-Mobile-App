@@ -30,6 +30,7 @@ import AddNutritionScreen from './screens/loggedIn/NutritionTab/AddNutritionScre
 import CreatedNutritionScreen from './screens/loggedIn/NutritionTab/CreatedNutritionScreen';
 import AllNutritionScreen from './screens/loggedIn/NutritionTab/AllNutritionScreen';
 import EditWorkoutScreen from './screens/loggedIn/WorkoutTab/EditWorkoutScreen';
+import EditNutritionScreen from './screens/loggedIn/NutritionTab/EditNutritionScreen';
 
 export default function App() {
 
@@ -37,7 +38,6 @@ export default function App() {
   const Stack = createNativeStackNavigator();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState("");
-
 
   useEffect(() => {
     auth.onAuthStateChanged(user => {
@@ -131,6 +131,10 @@ export default function App() {
             component={EditWorkoutScreen}
             options={{headerShown:false}} 
             />
+            <Stack.Screen name="EditNutrition" 
+            component={EditNutritionScreen}
+            options={{headerShown:false}} 
+            />
             <Stack.Screen name="AllNutrition"
               component={AllNutritionScreen}
               options={{headerShown:false}}
@@ -202,6 +206,10 @@ export default function App() {
             <Stack.Screen name="Edit Workout" 
             component={EditWorkoutScreen} 
             options={{headerShown:false}}
+            />
+            <Stack.Screen name="EditNutrition" 
+            component={EditNutritionScreen}
+            options={{headerShown:false}} 
             />
             <Stack.Screen name="AllNutrition"
               component={AllNutritionScreen}

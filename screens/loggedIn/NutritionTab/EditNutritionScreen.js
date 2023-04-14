@@ -14,30 +14,28 @@ import { getAuth } from "firebase/auth";
 import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
-const EditWorkoutScreen = ({ route, navigation }) => {
-  const { day, exercises, name, trainingType, notes, id } = route.params;
+const EditNutritionScreen = ({ route, navigation }) => {
+  const { date, meals, name, notes, id } = route.params;
 
   const user = getAuth().currentUser;
-  const [newDay, setNewDay] = useState(day);
+  const [newDate, setNewDate] = useState(date);
   const [newName, setNewName] = useState(name);
-  const [newTrainingType, setNewTrainingType] = useState(trainingType);
+  const [newMeals, setNewMeals] = useState([...meals]);
   const [newNotes, setNewNotes] = useState(notes);
-  const [newExercises, setNewExercises] = useState([...exercises]);
 
   const handleSave = async () => {
     try {
       if (user) {
-        const workoutDocRef = doc(db, `users/${user.uid}/workouts/${id}`);
+        const docRef = doc(db, `users/${user.uid}/nutrition/${id}`);
 
-        await updateDoc(workoutDocRef, {
+        await updateDoc(docRef, {
           name: newName,
-          day: newDay,
-          trainingType: newTrainingType,
+          date: newDate,
           notes: newNotes,
-          exercises: newExercises,
+          meals: newMeals,
         });
         console.log("Updated successfully");
-        navigation.navigate("AllWorkout");
+        navigation.navigate("AllNutrition");
       }
     } catch (error) {
       console.error("Error updating workout: ", error);
@@ -54,15 +52,15 @@ const EditWorkoutScreen = ({ route, navigation }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={30} color="#0792F9" />
           </TouchableOpacity>
-          <Text style={styles.header}>Edit Workout</Text>
+          <Text style={styles.header}>Edit Meal Plan</Text>
           <View style={{ width: 24 }}></View>
         </View>
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Day:</Text>
+          <Text style={styles.label}>Date:</Text>
           <TextInput
             style={styles.input}
-            value={newDay}
-            onChangeText={setNewDay}
+            value={newDate}
+            onChangeText={setNewDate}
           />
         </View>
         <View style={styles.inputGroup}>
@@ -73,83 +71,90 @@ const EditWorkoutScreen = ({ route, navigation }) => {
             onChangeText={setNewName}
           />
         </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Training Type:</Text>
-          <TextInput
-            style={styles.input}
-            value={newTrainingType}
-            onChangeText={setNewTrainingType}
-          />
-        </View>
         <View style={styles.exercisesContainer}>
-          <Text style={styles.label}>Exercises:</Text>
-          {newExercises.map((exercise, index) => (
+          <Text style={styles.label}>Meals:</Text>
+          {newMeals.map((meal, index) => (
             <View key={index} style={styles.exerciseItem}>
-              <Text style={styles.exerciseLabel}>Exercise {index + 1}</Text>
+              <Text style={styles.exerciseLabel}>Meal {index + 1}</Text>
 
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Name:</Text>
                 <TextInput
                   style={styles.input}
-                  value={exercise.name}
+                  value={meal.name}
                   onChangeText={(text) => {
-                    const updatedExercises = [...newExercises];
-                    updatedExercises[index].name = text;
-                    setNewExercises(updatedExercises);
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].name = text;
+                    setNewMeals(updatedMeals);
                   }}
                 />
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Sets:</Text>
+                <Text style={styles.label}>Serving Size:</Text>
                 <TextInput
                   style={styles.input}
-                  value={exercise.sets}
+                  value={meal.servingSize}
+                  onChangeText={(text) => {
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].servingSize = text;
+                    setNewMeals(updatedMeals);
+                  }}
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Calories:</Text>
+                <TextInput
+                  style={styles.input}
+                  value={meal.calories}
                   keyboardType="numeric"
                   onChangeText={(text) => {
-                    const updatedExercises = [...newExercises];
-                    updatedExercises[index].sets = text;
-                    setNewExercises(updatedExercises);
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].calories = text;
+                    setNewMeals(updatedMeals);
                   }}
                 />
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Reps:</Text>
+                <Text style={styles.label}>Fat:</Text>
                 <TextInput
                   style={styles.input}
-                  value={exercise.reps}
+                  value={meal.fat}
                   keyboardType="numeric"
                   onChangeText={(text) => {
-                    const updatedExercises = [...newExercises];
-                    updatedExercises[index].reps = text;
-                    setNewExercises(updatedExercises);
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].fat = text;
+                    setNewMeals(updatedMeals);
                   }}
                 />
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Weight:</Text>
+                <Text style={styles.label}>Carbohydrates:</Text>
                 <TextInput
                   style={styles.input}
-                  value={exercise.weight}
+                  value={meal.carbohydrates}
+                  keyboardType="numeric"
                   onChangeText={(text) => {
-                    const updatedExercises = [...newExercises];
-                    updatedExercises[index].weight = text;
-                    setNewExercises(updatedExercises);
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].carbohydrates = text;
+                    setNewMeals(updatedMeals);
                   }}
                 />
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Video Link:</Text>
+                <Text style={styles.label}>Protein:</Text>
                 <TextInput
                   style={styles.input}
-                  value={exercise.videoLink}
+                  value={meal.protein}
+                  keyboardType="numeric"
                   onChangeText={(text) => {
-                    const updatedExercises = [...newExercises];
-                    updatedExercises[index].videoLink = text;
-                    setNewExercises(updatedExercises);
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].protein = text;
+                    setNewMeals(updatedMeals);
                   }}
                 />
               </View>
@@ -158,28 +163,29 @@ const EditWorkoutScreen = ({ route, navigation }) => {
           <TouchableOpacity
             style={styles.addButton}
             onPress={() => {
-              const newExercise = {
+              const newMeal = {
                 name: "",
-                sets: "",
-                reps: "",
-                weight: "",
-                videoLink: "",
+                servingSize: "",
+                calories: "",
+                carbohydrates: "",
+                fat: "",
+                protein: "",
               };
-              setNewExercises([...newExercises, newExercise]);
+              setNewMeals([...newMeals, newMeal]);
             }}
           >
-            <Text style={styles.addButtonLabel}>+ Add Exercise</Text>
+            <Text style={styles.addButtonLabel}>+ Add Meal</Text>
           </TouchableOpacity>
-          {newExercises.length > 0 && (
+          {newMeals.length > 0 && (
             <TouchableOpacity
               style={styles.removeButton}
               onPress={() => {
-                const newExercisesList = [...newExercises];
-                newExercisesList.pop();
-                setNewExercises(newExercisesList);
+                const newMealsList = [...newMeals];
+                newMealsList.pop();
+                setNewMeals(newMealsList);
               }}
             >
-              <Text style={styles.removeButtonLabel}>- Remove Exercise</Text>
+              <Text style={styles.removeButtonLabel}>- Remove Meal</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -201,7 +207,7 @@ const EditWorkoutScreen = ({ route, navigation }) => {
   );
 };
 
-export default EditWorkoutScreen;
+export default EditNutritionScreen;
 
 const styles = StyleSheet.create({
   container: {
