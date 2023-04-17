@@ -31,6 +31,7 @@ import CreatedNutritionScreen from './screens/loggedIn/NutritionTab/CreatedNutri
 import AllNutritionScreen from './screens/loggedIn/NutritionTab/AllNutritionScreen';
 import EditWorkoutScreen from './screens/loggedIn/WorkoutTab/EditWorkoutScreen';
 import EditNutritionScreen from './screens/loggedIn/NutritionTab/EditNutritionScreen';
+import AssignedNutritionScreen from './screens/loggedIn/NutritionTab/AssignedNutritionScreen';
 
 export default function App() {
 
@@ -201,6 +202,10 @@ export default function App() {
           <Stack.Navigator>
             <Stack.Screen name="HomeTabs"
               component={HomeTabs}
+              options={{headerShown:false}}
+            />
+            <Stack.Screen name="AssignedNutrition"
+              component={AssignedNutritionScreen}
               options={{headerShown:false}}
             />
             <Stack.Screen name="Edit Workout" 

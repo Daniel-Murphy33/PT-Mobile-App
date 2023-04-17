@@ -20,20 +20,11 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebase";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { useEffect } from "react";
 
 const FormOne = () => {
-  //navigation through screens
-  const navigation = useNavigation();
-
-  //for changing metric system
-  const [weightUnitOpen, setWeightUnitOpen] = useState(false);
-  const [weightUnitValue, setWeightUnitValue] = useState("kg");
-  const [weightUnitItems, setWeightUnitItems] = useState([
-    { label: "kg", value: "kg" },
-    { label: "lbs", value: "lbs" },
-  ]);
+  const route = useRoute(); 
 
   // for dropdown
   const [open, setOpen] = useState(false);
@@ -72,16 +63,18 @@ const FormOne = () => {
   //Create in Firesotre
   const AddWorkout = async () => {
     const user = getAuth().currentUser;
+    const { email } = route.params;
     if (user) {
       try {
-        const docRef = doc(db, "users", user.uid);
-        const colRef = collection(docRef, "workouts");
+        const colRef = collection(db, "workouts");
         addDoc(colRef, {
           day: day,
           name: name,
           trainingType: value,
           exercises: exercises,
           createdAt: serverTimestamp(),
+          client: email,
+          trainer: user.email,
         });
       } catch (e) {
         console.log(e);
@@ -241,6 +234,7 @@ const FormOne = () => {
 };
 
 const FormTwo = () => {
+  const route = useRoute(); 
   const [date, setDate] = useState("");
   const [mealPlanName, setMealPlanName] = useState("");
   const [meals, setMeals] = useState([
@@ -283,15 +277,17 @@ const FormTwo = () => {
   //Create in Firesotre
   const addNutrition = async () => {
     const user = getAuth().currentUser;
+    const { email } = route.params;
     if (user) {
       try {
-        const docRef = doc(db, "users", user.uid);
-        const colRef = collection(docRef, "nutrition");
+        const colRef = collection(db, "nutrition");
         addDoc(colRef, {
           date: date,
           mealPlanName: mealPlanName,
           meals: meals,
           createdAt: serverTimestamp(),
+          client: email,
+          trainer: user.email
         });
       } catch (e) {
         console.log(e);

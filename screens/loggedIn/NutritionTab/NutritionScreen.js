@@ -71,7 +71,7 @@ const NutritionScreen = () => {
         {userData.role === "client" && (
           <TouchableOpacity
             style={styles.ViewWorkoutBtn}
-            onPress={() => navigation.navigate("AssignedWorkouts")}
+            onPress={() => navigation.navigate("AssignedNutrition")}
           >
             <Text style={styles.btnText}>View Assigned Plans</Text>
           </TouchableOpacity>

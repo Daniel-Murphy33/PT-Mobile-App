@@ -11,8 +11,8 @@ import {
 import { doc, db, getDoc } from "../../../firebase";
 import { deleteUser, getAuth } from "firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth } from "../../../firebase";
 import { Entypo } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ProfileScreen = () => {
   const auth = getAuth();
@@ -60,9 +60,11 @@ const ProfileScreen = () => {
     await setUser(userSnapshot.data());
   };
 
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUserProfile();
+    }, [])
+  );
 
   return (
     <SafeAreaView
@@ -136,34 +138,6 @@ const ProfileScreen = () => {
         )}
         <TouchableOpacity style={styles.userBtn} onPress={handleSignOut}>
           <Text style={styles.userBtnTxt}>Sign Out</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.userInfoWrapper}>
-        <View styles={styles.userInfoItem}>
-          <Text style={styles.userInfoTitle}>18</Text>
-          <Text style={styles.userInfoSubTitle}>Workouts</Text>
-        </View>
-        <View styles={styles.userInfoItem}>
-          <Text style={styles.userInfoTitle}>18</Text>
-          <Text style={styles.userInfoSubTitle}>Nutrition Plans</Text>
-        </View>
-        <View styles={styles.userInfoItem}>
-          <Text style={styles.userInfoTitle}>25</Text>
-          <Text style={styles.userInfoSubTitle}>Client's</Text>
-        </View>
-      </View>
-      <View style={styles.clientContainer}>
-        <TouchableOpacity
-          style={styles.cardContainer}
-          onPress={() =>
-            navigation.navigate("TrainerScreen", {
-              email: email,
-            })
-          }
-        >
-          <Text style={styles.clientName}>Trainer Name : </Text>
-          <Text style={styles.clientEmail}>Trainer Email : </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -260,20 +234,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
     textAlign: "center",
-  },
-  clientContainer: {
-    backgroundColor: "#f9f9f9",
-    borderRadius: 8,
-    padding: 20,
-    marginTop: 10,
-  },
-  clientName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  clientEmail: {
-    fontSize: 16,
-    color: "#666",
   },
 });

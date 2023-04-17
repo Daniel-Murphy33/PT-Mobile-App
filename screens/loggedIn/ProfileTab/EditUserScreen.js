@@ -1,53 +1,116 @@
-import { getAuth } from 'firebase/auth';
-import { doc, getDoc, } from 'firebase/firestore';
-import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { db } from '../../../firebase';
-import { SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, KeyboardAvoidingView, ScrollView } from "react-native";
+
+import { getAuth } from "firebase/auth";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { useNavigation } from "@react-navigation/native";
 
 const EditUserScreen = () => {
   const userCred = getAuth().currentUser;
   const [user, setUser] = useState({});
-
-  const fetchUserProfile = async () => {
-    const userRef = doc(db, "users", userCred.uid);
-    const userSnapshot = await getDoc(userRef);
-    await setUser(userSnapshot.data());
-  };
+  const navigation = useNavigation();
+  const [newFirstName, setNewFirstName] = useState(user.firstName);
+  const [newLastName, setNewLastName] = useState(user.lastName);
+  const [newAge, setNewAge] = useState(user.age);
+  const [newCurrentWeight, setNewCurrentWeight] = useState(user.currentWeight);
+  const [newGoalWeight, setNewGoalWeight] = useState(user.goalWeight);
 
   useEffect(() => {
+    const fetchUserProfile = async () => {
+      const userRef = doc(db, "users", userCred.uid);
+      const userSnapshot = await getDoc(userRef);
+      const userData = userSnapshot.data();
+      setNewFirstName(userData.firstName || "");
+      setNewLastName(userData.lastName || "");
+      setNewAge(userData.age || "");
+      setNewCurrentWeight(userData.currentWeight || "");
+      setNewGoalWeight(userData.goalWeight || "");
+    };
     fetchUserProfile();
   }, []);
 
+  const handleSave = async () => {
+    try {
+      if (user) {
+        const docRef = doc(db, `users/${userCred.uid}`);
+
+        await updateDoc(docRef, {
+          firstName: newFirstName,
+          lastName: newLastName,
+          age: newAge,
+          currentWeight: newCurrentWeight,
+          goalWeight: newGoalWeight,
+        });
+        console.log("Updated successfully");
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error("Error updating workout: ", error);
+    }
+  };
+
+  
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Edit User Info</Text>
-      <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          value={user.firstName}
-        />
-        <TextInput
-          style={styles.input}
-          value={user.lastName}
-        />
-        <TextInput
-          style={styles.input}
-          value={user.age}
-        />
-        <TextInput
-          style={styles.input}
-          value={user.currentWeight}
-          keyboardType="number-pad"
-        />
-        <TextInput
-          style={styles.input}
-          value={user.goalWeight}
-          keyboardType="number-pad"
-        />
-      </View>
+      <ScrollView contentContainerStyle={styles.formContainer}>
+        <Text style={styles.formTitle}>Edit User Profile</Text>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>First Name</Text>
+          <TextInput
+            style={styles.input}
+            value={newFirstName}
+            onChangeText={setNewFirstName}
+          />
+        </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Last Name</Text>
+          <TextInput
+            style={styles.input}
+            value={newLastName}
+            onChangeText={setNewLastName}
+          />
+        </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Age</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            value={newAge}
+            onChangeText={setNewAge}
+          />
+        </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Current Weight</Text>
+          <TextInput
+            style={styles.input}
+            value={newCurrentWeight}
+            onChangeText={setNewCurrentWeight}
+          />
+        </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Goal Weight</Text>
+          <TextInput
+            style={styles.input}
+            value={newGoalWeight}
+            onChangeText={setNewGoalWeight}
+          />
+        </View>
+        <View style={styles.buttonGroup}>
+          <TouchableOpacity
+            style={styles.submitButtonContainer}
+            onPress={handleSave}
+          >
+            <Text style={styles.submitButton}>Save Changes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -57,22 +120,88 @@ export default EditUserScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
   },
   formContainer: {
-    flex: 1,
+    width: "80%",
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  formTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  formGroup: {
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: "#444",
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
+    borderColor: "#ddd",
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
+    color: "#444",
   },
+  submitButtonContainer: {
+    marginTop: 20,
+    alignSelf: "center",
+    backgroundColor: "#0792F9",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  submitButton: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  buttonGroup: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  cancelButton: {
+    backgroundColor: '#ff0000',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  cancelButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },  
 });

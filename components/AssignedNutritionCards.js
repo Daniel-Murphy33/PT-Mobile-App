@@ -33,7 +33,13 @@ const renderRightActions = (progress, dragX, item) => {
     outputRange: [0, 0, 0, 1],
   });
   return (
-    <TouchableOpacity style={styles.deleteBtn} onPress={() => DeleteWorkout(item)}>
+    <TouchableOpacity
+      style={styles.deleteBtn}
+      onPress={() => {
+        const docRef = doc(db, "users", user.uid, "nutrition", item.key);
+        deleteDoc(docRef);
+      }}
+    >
       <Ionicons name="trash-bin" size={40} color="red" />
       <Animated.Text
         style={[
@@ -49,12 +55,12 @@ const renderRightActions = (progress, dragX, item) => {
   );
 };
 
-const DeleteWorkout = (item) => {
+const DeleteUser = (item) => {
   const user = getAuth().currentUser;
 
   Alert.alert(
-    "Delete Workout",
-    "Are you sure you want to delete this workout?",
+    "Delete Account",
+    "Are you sure you want to delete this meal plan?",
     [
       {
         text: "Cancel",
@@ -63,7 +69,7 @@ const DeleteWorkout = (item) => {
       {
         text: "Delete",
         onPress: () => {
-          const docRef = doc(db, "workouts", item.key);
+          const docRef = doc(db, "users", user.uid, "nutrition", item.key);
           deleteDoc(docRef);
         },
       },
@@ -72,41 +78,41 @@ const DeleteWorkout = (item) => {
   );
 };
 
-const AssignedWorkoutCards = () => {
+const AssignedNutritionCards = () => {
   const user = getAuth().currentUser;
-  const [workouts, setWorkouts] = useState([]);
+  const [nutrition, setNutrition] = useState([]);
   const navigation = useNavigation();
 
   // getting from firestore
-  const GetWorkout = async () => {
+  const GetNutrition = async () => {
     // get user
     if (user) {
-      const colRef = collection(db, "workouts");
+      const colRef = collection(db, "nutrition"); 
       const q = await query(colRef, where("client", "==", user.email));
       const subscriber = onSnapshot(q, (snapshot) => {
-        let newWorkouts = [];
+        let newNutrition = [];
         snapshot.docs.forEach((doc) => {
-          newWorkouts.push({ ...doc.data(), key: doc.id });
+          newNutrition.push({ ...doc.data(), key: doc.id });
         });
-        setWorkouts(newWorkouts);
-        console.log(newWorkouts);
+        setNutrition(newNutrition);
+        console.log(newNutrition);
       });
       return () => subscriber();
     }
   };
 
   useEffect(() => {
-    GetWorkout();
+    GetNutrition();
   }, []);
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={workouts}
-        key={(item) => item.id}
+        data={nutrition}
+        keyExtractor={(item) => item.key}
         style={{ flex: 1, overflow: "scroll" }}
         renderItem={({ item }) => (
-          <View style={styles.cardContainer}>
+          <View key={item.id} style={styles.cardContainer}>
             <Swipeable
               renderRightActions={(progress, dragX) =>
                 renderRightActions(progress, dragX, item)
@@ -115,27 +121,23 @@ const AssignedWorkoutCards = () => {
               <TouchableOpacity
                 style={styles.card}
                 onPress={() =>
-                  navigation.navigate("CreatedWorkout", {
-                    day: item.day,
-                    exercises: item.exercises,
-                    id: item.id,
-                    name: item.name,
-                    trainingType: item.trainingType,
-                    client: item.client,
+                  navigation.navigate("CreatedNutrition", {
+                    date: item.date,
+                    notes: item.notes,
+                    meals: item.meals,
+                    id: item.key,
+                    name: item.mealPlanName,
                   })
                 }
               >
-                <View style={styles.header}>
-                  <Text style={styles.workoutName}>{item.name}</Text>
+                <Text style={styles.mealPlanName}>{item.mealPlanName}</Text>
+                <View style={styles.dateContainer}>
                   <MaterialCommunityIcons
-                    name="dumbbell"
-                    size={24}
+                    name="calendar-today"
+                    size={20}
                     color="black"
                   />
-                </View>
-                <View style={styles.typeContainer}>
-                  <Text style={styles.trainingType}>{item.trainingType}</Text>
-                  <Text style={styles.day}>{item.day}</Text>
+                  <Text style={styles.date}>{item.date}</Text>
                 </View>
               </TouchableOpacity>
             </Swipeable>
@@ -145,19 +147,13 @@ const AssignedWorkoutCards = () => {
     </View>
   );
 };
-  
-export default AssignedWorkoutCards;
+
+export default AssignedNutritionCards;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F2F2F2",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 8,
   },
   cardContainer: {
     padding: 16,
@@ -180,28 +176,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
   },
-  workoutName: {
+  mealPlanName: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 8,
   },
-  typeContainer: {
+  dateContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
   },
-  trainingType: {
+  date: {
+    marginLeft: 8,
     fontSize: 16,
-  },
-  day: {
-    fontSize: 16,
-  },
-  deleteBtn: {
-    justifyContent: "center",
-  },
-  deleteText: {
-    marginRight: 15,
-    fontWeight: "bold",
-    fontSize: 12,
   },
 });

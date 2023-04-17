@@ -9,11 +9,9 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
 } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
 import { getAuth } from "firebase/auth";
 import { doc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebase";
-import { useNavigation } from "@react-navigation/native";
 
 const AddNutritionScreen = () => {
   const [date, setDate] = useState("");
@@ -208,7 +206,7 @@ const AddNutritionScreen = () => {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
-    );
+    ); 
   };
 
 export default AddNutritionScreen;
