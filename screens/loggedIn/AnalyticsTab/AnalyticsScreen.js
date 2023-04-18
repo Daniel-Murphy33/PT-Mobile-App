@@ -48,45 +48,48 @@ const AnalyticsScreen = () => {
   }, []);
 
   return (
-    // <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Weight Progress</Text>
       <View style={styles.chartContainer}>
-        <VictoryChart theme={VictoryTheme.material} >
-          <VictoryAxis
-            label={"Weight"}
-            dependentAxis
-            style={{
-              axisLabel: { fontSize: 20, padding: 30, fontWeight: "bold", },
-              tickLabels: { fontSize: 15, padding: 5,  },
-            }}
-            tickLabelComponent={<VictoryLabel textAnchor="start" />}
-          />
-          <VictoryAxis
-          label={"Date"}
-            style={{
-              axisLabel: { fontSize: 20, padding: 30, fontWeight: "bold", },
-              tickLabels: { fontSize: 15, padding: 5,  },
-            }}
-          />
-          <VictoryLine
-            data={weightsData.map((weightData, index) => ({
-              x: index,
-              y: weightData.weight,
-            }))}
-            style={{
-              data: { stroke: "#0792F9", strokeWidth: 8 },
-            }}
-          />
-        </VictoryChart>
-        <TouchableOpacity style={styles.weightBtn} onPress={() => navigation.navigate("WeightHistory")}>
+        {weightsData.length < 2 ? (
+          <Text style={styles.message}>Enter more weights to see progress</Text>
+        ) : (
+          <VictoryChart theme={VictoryTheme.material}>
+            <VictoryAxis
+              label={"Weight"}
+              dependentAxis
+              style={{
+                axisLabel: { fontSize: 20, padding: 30, fontWeight: "bold" },
+                tickLabels: { fontSize: 15, padding: 5 },
+              }}
+              tickLabelComponent={<VictoryLabel textAnchor="start" />}
+            />
+            <VictoryAxis
+              label={"Date"}
+              style={{
+                axisLabel: { fontSize: 20, padding: 30, fontWeight: "bold" },
+                tickLabels: { fontSize: 15, padding: 5 },
+              }}
+            />
+            <VictoryLine
+              data={weightsData.map((weightData, index) => ({
+                x: index,
+                y: weightData.weight,
+              }))}
+              style={{
+                data: { stroke: "#0792F9", strokeWidth: 8 },
+              }}
+            />
+          </VictoryChart>
+        )}
+        <TouchableOpacity
+          style={styles.weightBtn}
+          onPress={() => navigation.navigate("WeightHistory")}
+        >
           <Text style={styles.weightBtnTxt}>View Weight History</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.weightBtn} onPress={() => navigation.navigate("PromptForm")}>
-          <Text style={styles.weightBtnTxt}>Create AI generated Workout</Text>
-        </TouchableOpacity>
       </View>
-      </ScrollView>
+    </ScrollView>
   );
 };
 
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 20,
     marginBottom: 10,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   chartContainer: {
     marginLeft: 10,
@@ -116,11 +119,16 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
-    width: '70%',
-    alignSelf: 'center',
+    width: "70%",
+    alignSelf: "center",
   },
   weightBtnTxt: {
     color: "#FFF",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  message: {
+    fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
   },

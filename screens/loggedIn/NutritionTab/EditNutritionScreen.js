@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "firebase/auth";
-import { serverTimestamp, doc, setDoc, updateDoc } from "firebase/firestore";
+import { serverTimestamp, doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 const EditNutritionScreen = ({ route, navigation }) => {
