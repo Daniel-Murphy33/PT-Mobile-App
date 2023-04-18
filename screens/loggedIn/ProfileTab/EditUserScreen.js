@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, KeyboardAvoidingView, ScrollView } from "react-native";
 
 import { getAuth } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useNavigation } from "@react-navigation/native";
 
@@ -30,11 +30,25 @@ const EditUserScreen = () => {
     fetchUserProfile();
   }, []);
 
+  const addWeightEntry = async () => {
+    try {
+      const weightEntry = {
+        date: new Date(),
+        weight: newCurrentWeight,
+      };
+      await setDoc(doc(db, `users/${userCred.uid}/weights`, weightEntry.date.toISOString()), weightEntry);
+      console.log("Weight entry added");
+    } catch (error) {
+      console.error("Error adding weight entry: ", error);
+    }
+  };
+  
+
   const handleSave = async () => {
     try {
       if (user) {
         const docRef = doc(db, `users/${userCred.uid}`);
-
+  
         await updateDoc(docRef, {
           firstName: newFirstName,
           lastName: newLastName,
@@ -42,14 +56,19 @@ const EditUserScreen = () => {
           currentWeight: newCurrentWeight,
           goalWeight: newGoalWeight,
         });
+  
+        // Add a new weight entry if the current weight has changed
+        if (newCurrentWeight !== user.currentWeight) {
+          await addWeightEntry();
+        }
+  
         console.log("Updated successfully");
         navigation.goBack();
       }
     } catch (error) {
       console.error("Error updating workout: ", error);
     }
-  };
-
+  };  
   
   return (
     <SafeAreaView style={styles.container}>

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "firebase/auth";
-import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 const EditWorkoutScreen = ({ route, navigation }) => {
@@ -35,6 +35,7 @@ const EditWorkoutScreen = ({ route, navigation }) => {
           trainingType: newTrainingType,
           notes: newNotes,
           exercises: newExercises,
+          createdAt: serverTimestamp(),
         });
         console.log("Updated successfully");
         navigation.navigate("AllWorkout");

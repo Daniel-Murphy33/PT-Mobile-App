@@ -47,37 +47,43 @@ const RegisterScreen = () => {
   };
 
   //function for signing up
-  const handleSignUp = async () => {
-    auth
-      //creates with email and password and uid
-      .createUserWithEmailAndPassword(email, password)
-      .then(async (UserCredentials) => {
-        const user = UserCredentials.user;
-        console.log("Registered with: ", user.email);
-        //Adding extra user details to users and linking with uid
-        try {
-          const uidRef = doc(db, "users", user.uid);
-          updateProfile(auth.currentUser, {
-            displayName: firstName 
-          }).then(() => {
-            console.log("Display name updated");
-          }).catch((error) => {
-            console.log(error)
-          });
-          await setDoc(uidRef, {
-            role: value,
-            firstName: firstName,
-            lastName: lastName,
-            age: age,
-            currentWeight: currentWeight,
-            goalWeight: goalWeight,
-          });
-        } catch (e) {
-          console.error("Error adding document: ", e);
-        }
-      })
-      .catch((error) => alert(error.message));
-  };
+const handleSignUp = async () => {
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(async (UserCredentials) => {
+      const user = UserCredentials.user;
+      console.log("Registered with: ", user.email);
+      try {
+        const uidRef = doc(db, "users", user.uid);
+        updateProfile(auth.currentUser, {
+          displayName: firstName 
+        }).then(() => {
+          console.log("Display name updated");
+        }).catch((error) => {
+          console.log(error)
+        });
+        await setDoc(uidRef, {
+          role: value,
+          firstName: firstName,
+          lastName: lastName,
+          age: age,
+          currentWeight: currentWeight,
+          goalWeight: goalWeight,
+        });
+
+        // Create a new weights collection for the user
+        const initialWeight = {
+          date: new Date(),
+          weight: currentWeight,
+        };
+        await setDoc(doc(db, `users/${user.uid}/weights`, initialWeight.date.toISOString()), initialWeight);
+
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    })
+    .catch((error) => alert(error.message));
+};
 
   return (
     //allows for dismissing keyboard

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "firebase/auth";
-import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { serverTimestamp, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 const EditNutritionScreen = ({ route, navigation }) => {
@@ -28,11 +28,12 @@ const EditNutritionScreen = ({ route, navigation }) => {
       if (user) {
         const docRef = doc(db, `users/${user.uid}/nutrition/${id}`);
 
-        await updateDoc(docRef, {
-          name: newName,
+        await setDoc(docRef, {
+          mealPlanName: newName,
           date: newDate,
           notes: newNotes,
           meals: newMeals,
+          createdAt: serverTimestamp(),
         });
         console.log("Updated successfully");
         navigation.navigate("AllNutrition");

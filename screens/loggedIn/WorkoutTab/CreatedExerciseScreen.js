@@ -19,27 +19,12 @@ const CreatedExerciseScreen = ({ route }) => {
   const { exercise, exercises, currentIndex } = route.params;
   const navigation = useNavigation();
   const [videoId, setVideoId] = useState("");
-  console.log(exercise.videoLink);
 
   const extractId = () => {
     if (exercise.videoLink) {
       const extractedId = exercise.videoLink.slice(-11);
       setVideoId(extractedId);
     }
-  };
-
-  const handleNextExercise = () => {
-    if (currentIndex < exercises.length - 1) {
-      navigation.push("CreatedExerciseScreen", {
-        exercise: exercises[currentIndex + 1],
-        exercises,
-        currentIndex: currentIndex + 1,
-      });
-    }
-  };
-
-  const handlePreviousExercise = () => {
-    navigation.goBack();
   };
 
   useEffect(() => {
@@ -59,25 +44,11 @@ const CreatedExerciseScreen = ({ route }) => {
       <Text style={styles.sets}>x{exercise.reps} Reps</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={styles.prevBtn}
-          onPress={handlePreviousExercise}
-        >
-          <Text style={styles.btnText}>PREVIOUS</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.nextBtn} onPress={handleNextExercise}>
-          <Text style={styles.btnText}>NEXT</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
           style={styles.exitBtn}
           onPress={() => navigation.goBack()}
         >
           <Text
-            style={styles.btnText}
-            onPress={() => navigation.navigate("AllWorkout")}
-          >
-            EXIT
-          </Text>
+            style={styles.btnText}>BACK</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
