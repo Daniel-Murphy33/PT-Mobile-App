@@ -113,7 +113,7 @@ const RecentWorkoutCard = () => {
                   day: item.day,
                   notes: item.notes,
                   exercises: item.exercises,
-                  id: item.id,
+                  id: item.key,
                   name: item.name,
                   trainingType: item.trainingType,
                 })

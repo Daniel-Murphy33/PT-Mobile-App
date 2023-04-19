@@ -111,7 +111,7 @@ const RecentWorkoutCard = () => {
                   date: item.date,
                   notes: item.notes,
                   meals: item.meals,
-                  id: item.id,
+                  id: item.key,
                   name: item.mealPlanName,
                 })
               }

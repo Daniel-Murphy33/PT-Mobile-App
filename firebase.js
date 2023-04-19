@@ -2,7 +2,7 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { getFirestore, collection, addDoc, getDocs, onSnapshot,
-  setDoc, doc, getDoc, query, where  } from "firebase/firestore";
+  setDoc, doc, getDoc, } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -34,10 +34,6 @@ else {
 const db = getFirestore(app);
 //get authentication
 const auth = firebase.auth()
-//collection reference
-const exerciseRef = collection(db, 'Exercise')
-//users collection reference
-const usersRef = collection(db, 'users')
 
-export { auth, app, db, getFirestore, collection, addDoc, getDocs, getDoc, exerciseRef, usersRef, onSnapshot,
+export { auth, app, db, getFirestore, collection, addDoc, getDocs, getDoc, onSnapshot,
 setDoc, doc, };

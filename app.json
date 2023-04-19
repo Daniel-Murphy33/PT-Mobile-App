@@ -1,7 +1,7 @@
 {
   "expo": {
-    "slug": "frontend",
-    "name": "frontend",
+    "slug": "fitness-bro",
+    "name": "FitnessBro - Final Year Project",
     "sdkVersion": "47.0.0",
     "extra": {
       "eas": {
@@ -12,5 +12,5 @@
       "bundleIdentifier": "fitness-bro"
     }
   },
-  "name": "frontend"
+  "name": "FitnessBro - Final Year Project"
 }

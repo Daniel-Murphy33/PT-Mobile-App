@@ -19,12 +19,11 @@ const AddWorkoutScreen = () => {
   //navigation through screens
   const navigation = useNavigation();
 
-  //for changing metric system
-  const [weightUnitOpen, setWeightUnitOpen] = useState(false);
-  const [weightUnitValue, setWeightUnitValue] = useState("kg");
-  const [weightUnitItems, setWeightUnitItems] = useState([
-    { label: "kg", value: "kg" },
-    { label: "lbs", value: "lbs" },
+  const [exerciseTypeOpen, setExerciseTypeOpen] = useState(false);
+  const [exerciseTypeValue, setExerciseTypeValue] = useState(null);
+  const [exerciseTypeItems, setExerciseTypeItems] = useState([
+    { label: "Strength", value: "Strength" },
+    { label: "Cardio", value: "Cardio" },
   ]);
 
   // for dropdown
@@ -32,21 +31,31 @@ const AddWorkoutScreen = () => {
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
     { label: "Strength", value: "Strength" },
-    { label: "Fitness", value: "Fitness" },
+    { label: "Cardio", value: "Cardio" },
     { label: "Hybrid", value: "Hybrid" },
   ]);
 
   const [day, setDay] = useState("");
   const [name, setName] = useState("");
   const [exercises, setExercises] = useState([
-    { name: "", sets: "", reps: "", weight: "", videoLink: "" },
+    { name: "", sets: "", reps: "", weight: "", videoLink: "", rounds: "",
+    time: "", },
   ]);
   const [notes, setNotes] = useState("");
 
   const handleAddExercise = () => {
     setExercises([
       ...exercises,
-      { name: "", sets: "", reps: "", weight: "", videoLink: "" },
+      {
+        name: "",
+        sets: "",
+        reps: "",
+        weight: "",
+        videoLink: "",
+        rounds: "",
+        time: "",
+        exerciseType: exerciseTypeValue,
+      },
     ]);
   };
 
@@ -64,30 +73,29 @@ const AddWorkoutScreen = () => {
 
   //Create in Firesotre
   const AddWorkout = async () => {
-  const user = getAuth().currentUser;
-  if (user) {
-    try {
-      const docRef = doc(db, "users", user.uid);
-      const colRef = collection(docRef, "workouts");
-      await addDoc(colRef, {
-        day: day,
-        name: name,
-        trainingType: value,
-        exercises: exercises,
-        notes: notes,
-        createdAt: serverTimestamp(),
-      });
-      setDay("");
-      setName("");
-      setExercises([{ name: "" }]);
-      setNotes("");
-      console.log(exercises);
-    } catch (e) {
-      console.log(e);
+    const user = getAuth().currentUser;
+    if (user) {
+      try {
+        const docRef = doc(db, "users", user.uid);
+        const colRef = collection(docRef, "workouts");
+        await addDoc(colRef, {
+          day: day,
+          name: name,
+          trainingType: value,
+          exercises: exercises,
+          notes: notes,
+          createdAt: serverTimestamp(),
+        });
+        setDay("");
+        setName("");
+        setExercises([{ name: "" }]);
+        setNotes("");
+        console.log(exercises);
+      } catch (e) {
+        console.log(e);
+      }
     }
-  }
-};
-
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -123,8 +131,8 @@ const AddWorkoutScreen = () => {
               />
             </View>
 
-            <View style={[styles.formBox, {zIndex:1,}]}>
-            <Text style={styles.label}>Select Training Type :</Text>
+            <View style={[styles.formBox, { zIndex: 1 }]}>
+              <Text style={styles.label}>Select Training Type :</Text>
               <DropDownPicker
                 style={styles.input}
                 overlayStyle={styles.overlay}
@@ -143,8 +151,21 @@ const AddWorkoutScreen = () => {
 
             {exercises.map((exercise, index) => (
               <View key={index} style={styles.formBox}>
+                <Text style={styles.label}>Exercise Type :</Text>
+                <DropDownPicker
+                  style={styles.input}
+                  overlayStyle={styles.overlay}
+                  placeholder={"Select Exercise Type"}
+                  open={exerciseTypeOpen}
+                  value={exerciseTypeValue}
+                  items={exerciseTypeItems}
+                  setOpen={setExerciseTypeOpen}
+                  setValue={setExerciseTypeValue}
+                  setItems={setExerciseTypeItems}
+                  listMode="SCROLLVIEW"
+                  modal
+                />
                 <Text style={styles.label}>Exercise {index + 1} :</Text>
-
                 <TextInput
                   style={styles.input}
                   placeholder="Enter exercise name..."
@@ -155,38 +176,67 @@ const AddWorkoutScreen = () => {
                   }
                 />
 
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter sets..."
-                  placeholderTextColor={"grey"}
-                  keyboardType="numeric"
-                  value={exercise.sets}
-                  onChangeText={(text) =>
-                    handleExerciseChange(index, "sets", text)
-                  }
-                />
+                {exerciseTypeValue === "Strength" && (
+                  <>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Enter sets..."
+                      placeholderTextColor={"grey"}
+                      keyboardType="numeric"
+                      value={exercise.sets}
+                      onChangeText={(text) =>
+                        handleExerciseChange(index, "sets", text)
+                      }
+                    />
 
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter reps..."
-                  placeholderTextColor={"grey"}
-                  keyboardType="numeric"
-                  value={exercise.reps}
-                  onChangeText={(text) =>
-                    handleExerciseChange(index, "reps", text)
-                  }
-                />
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Enter reps..."
+                      placeholderTextColor={"grey"}
+                      keyboardType="numeric"
+                      value={exercise.reps}
+                      onChangeText={(text) =>
+                        handleExerciseChange(index, "reps", text)
+                      }
+                    />
 
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter weight..."
-                  placeholderTextColor={"grey"}
-                  value={exercise.weight}
-                  onChangeText={(text) =>
-                    handleExerciseChange(index, "weight", text)
-                  }
-                />
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Enter weight..."
+                      placeholderTextColor={"grey"}
+                      value={exercise.weight}
+                      onChangeText={(text) =>
+                        handleExerciseChange(index, "weight", text)
+                      }
+                    />
+                  </>
+                )}
 
+                {exerciseTypeValue === "Cardio" && (
+                  <>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Enter rounds..."
+                      placeholderTextColor={"grey"}
+                      keyboardType="numeric"
+                      value={exercise.rounds}
+                      onChangeText={(text) =>
+                        handleExerciseChange(index, "rounds", text)
+                      }
+                    />
+
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Enter time..."
+                      placeholderTextColor={"grey"}
+                      keyboardType="numeric"
+                      value={exercise.time}
+                      onChangeText={(text) =>
+                        handleExerciseChange(index, "time", text)
+                      }
+                    />
+                  </>
+                )}
                 <TextInput
                   style={styles.input}
                   placeholder="Enter video link..."
@@ -201,7 +251,7 @@ const AddWorkoutScreen = () => {
                   style={styles.addButton}
                   onPress={handleAddExercise}
                 >
-                  <Text style={styles.addButtonText}>Add Exersie</Text>
+                  <Text style={styles.addButtonText}>Add Exercise</Text>
                 </TouchableOpacity>
 
                 {index > 0 && (
@@ -274,7 +324,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     zIndex: 9999,
-  },  
+  },
   title: {
     alignSelf: "center",
     fontSize: 23,
