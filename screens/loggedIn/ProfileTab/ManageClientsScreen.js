@@ -1,6 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
-import { collection, doc, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import {
@@ -14,7 +20,6 @@ import {
 import { db } from "../../../firebase";
 import { Ionicons } from "@expo/vector-icons";
 
-
 const ManageClientsScreen = () => {
   const navigation = useNavigation();
   const user = getAuth().currentUser;
@@ -22,53 +27,55 @@ const ManageClientsScreen = () => {
   const [clients, setClients] = useState("");
   const [teams, setTeams] = useState([]);
 
-
   // getting from firestore
-const GetClients = async () => {
-  // get user
-  if (user) {
-    const docRef = doc(db, "clients", user.uid);
-    const colRef = collection(docRef, "clients");
-    const q = await query(colRef, orderBy("createdAt", "desc"));
-    const subscriber = onSnapshot(q, (snapshot) => {
-      let newClients = [];
-      snapshot.docs.forEach((doc) => {
-        newClients.push({ ...doc.data(), key: doc.id });
+  const GetClients = async () => {
+    // get user
+    if (user) {
+      const docRef = doc(db, "clients", user.uid);
+      const colRef = collection(docRef, "clients");
+      const q = await query(colRef, orderBy("createdAt", "desc"));
+      const subscriber = onSnapshot(q, (snapshot) => {
+        let newClients = [];
+        snapshot.docs.forEach((doc) => {
+          newClients.push({ ...doc.data(), key: doc.id });
+        });
+        setClients(newClients);
+        console.log(newClients);
       });
-      setClients(newClients);
-      console.log(newClients)
-    });
-    return () => subscriber();
-  }
-};
+      return () => subscriber();
+    }
+  };
 
-const GetTeams = async () => {
-  if (user) {
-    const docRef = doc(db, "teams", user.uid);
-    const colRef = collection(docRef, "teams");
-    const q = await query(colRef, orderBy("createdAt", "desc"));
-    const subscriber = onSnapshot(q, (snapshot) => {
-      let newTeams = [];
-      snapshot.docs.forEach((doc) => {
-        newTeams.push({ ...doc.data(), key: doc.id });
+  const GetTeams = async () => {
+    if (user) {
+      const docRef = doc(db, "teams", user.uid);
+      const colRef = collection(docRef, "teams");
+      const q = await query(colRef, orderBy("createdAt", "desc"));
+      const subscriber = onSnapshot(q, (snapshot) => {
+        let newTeams = [];
+        snapshot.docs.forEach((doc) => {
+          newTeams.push({ ...doc.data(), key: doc.id });
+        });
+        setTeams(newTeams);
+        console.log(newTeams);
       });
-      setTeams(newTeams);
-      console.log(newTeams);
-    });
-    return () => subscriber();
-  }
-};
+      return () => subscriber();
+    }
+  };
 
-useEffect(() => {
-  GetClients();
-  GetTeams();
-}, []); 
+  useEffect(() => {
+    GetClients();
+    GetTeams();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={{left:20}}>
-          <Ionicons name="arrow-back" size={30} color="#0792F9" />
-        </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{ left: 20 }}
+      >
+        <Ionicons name="arrow-back" size={30} color="#0792F9" />
+      </TouchableOpacity>
       <Text style={styles.title}>Manage Clients</Text>
       <TouchableOpacity
         style={styles.addClientBtn}
@@ -107,11 +114,13 @@ useEffect(() => {
           <View style={styles.clientContainer}>
             <TouchableOpacity
               style={styles.cardContainer}
-              onPress={() => navigation.navigate("TeamScreen", { 
-                id: team.key,
-                name: team.name,
-                members: team.members,
-                })}
+              onPress={() =>
+                navigation.navigate("TeamScreen", {
+                  id: team.key,
+                  name: team.name,
+                  members: team.members,
+                })
+              }
             >
               <Text style={styles.clientName}>{team.name}</Text>
             </TouchableOpacity>
@@ -119,7 +128,7 @@ useEffect(() => {
         )}
       />
     </SafeAreaView>
-  );  
+  );
 };
 
 export default ManageClientsScreen;
