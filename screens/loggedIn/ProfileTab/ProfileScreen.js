@@ -82,7 +82,7 @@ const ProfileScreen = () => {
   
     if (!result.canceled) {
       const imageUri = result.assets[0].uri;
-      updateUserProfile(imageUri); // pass the image URI directly to the function
+      updateUserProfile(imageUri);
     }
   };
   
@@ -90,16 +90,16 @@ const ProfileScreen = () => {
     const userRef = doc(db, "users", userCred.uid);
     await setDoc(userRef, {
       image: imageUri,
-    }, { merge: true }); // use merge: true to update only the image field
+    }, { merge: true }); 
   
-    setImage(imageUri); // update the state after updating the user profile
+    setImage(imageUri);
   };
 
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: "#fff",
         justifyContent: "center",
         alignItems: "center",
       }}

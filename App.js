@@ -33,6 +33,8 @@ import EditWorkoutScreen from './screens/loggedIn/WorkoutTab/EditWorkoutScreen';
 import EditNutritionScreen from './screens/loggedIn/NutritionTab/EditNutritionScreen';
 import AssignedNutritionScreen from './screens/loggedIn/NutritionTab/AssignedNutritionScreen';
 import WeightHistoryScreen from './screens/loggedIn/AnalyticsTab/WeightHistoryScreen';
+import TeamScreen from './screens/loggedIn/ProfileTab/TeamScreen';
+import AssignAllScreen from'./screens/loggedIn/ProfileTab/AssignAllScreen'
 
 export default function App() {
 
@@ -133,6 +135,14 @@ export default function App() {
               component={WeightHistoryScreen}
               options={{headerShown:false}}
             />
+            <Stack.Screen name="TeamScreen"
+              component={TeamScreen}
+              options={{headerShown:false}}
+            />
+            <Stack.Screen name="AssignAll"
+              component={AssignAllScreen}
+              options={{headerShown:false}}
+            />
             <Stack.Screen name="Edit Workout" 
             component={EditWorkoutScreen}
             options={{headerShown:false}} 
@@ -211,6 +221,14 @@ export default function App() {
             />
             <Stack.Screen name="WeightHistory"
               component={WeightHistoryScreen}
+              options={{headerShown:false}}
+            />
+            <Stack.Screen name="TeamScreen"
+              component={TeamScreen}
+              options={{headerShown:false}}
+            />
+            <Stack.Screen name="AssignAll"
+              component={AssignAllScreen}
               options={{headerShown:false}}
             />
             <Stack.Screen name="AssignedNutrition"

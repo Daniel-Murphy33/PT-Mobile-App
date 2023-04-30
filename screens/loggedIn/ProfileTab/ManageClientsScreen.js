@@ -20,6 +20,7 @@ const ManageClientsScreen = () => {
   const user = getAuth().currentUser;
 
   const [clients, setClients] = useState("");
+  const [teams, setTeams] = useState([]);
 
 
   // getting from firestore
@@ -41,8 +42,26 @@ const GetClients = async () => {
   }
 };
 
+const GetTeams = async () => {
+  if (user) {
+    const docRef = doc(db, "teams", user.uid);
+    const colRef = collection(docRef, "teams");
+    const q = await query(colRef, orderBy("createdAt", "desc"));
+    const subscriber = onSnapshot(q, (snapshot) => {
+      let newTeams = [];
+      snapshot.docs.forEach((doc) => {
+        newTeams.push({ ...doc.data(), key: doc.id });
+      });
+      setTeams(newTeams);
+      console.log(newTeams);
+    });
+    return () => subscriber();
+  }
+};
+
 useEffect(() => {
   GetClients();
+  GetTeams();
 }, []); 
 
   const AddClientScreen = () => {
@@ -62,21 +81,46 @@ useEffect(() => {
       <FlatList
         data={clients}
         style={{ marginTop: 25, overflow: "scroll" }}
-        key={item => item.id}
+        keyExtractor={(item) => item.key}
         renderItem={({ item: client }) => (
           <View style={styles.clientContainer}>
-            <TouchableOpacity style={styles.cardContainer} onPress={() => navigation.navigate("SingleClient", {
-            name: client.name,
-            email: client.email,
-        })}>
-            <Text style={styles.clientName}>{client.name}</Text>
-            <Text style={styles.clientEmail}>{client.email}</Text>
+            <TouchableOpacity
+              style={styles.cardContainer}
+              onPress={() =>
+                navigation.navigate("SingleClient", {
+                  name: client.name,
+                  email: client.email,
+                })
+              }
+            >
+              <Text style={styles.clientName}>{client.name}</Text>
+              <Text style={styles.clientEmail}>{client.email}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+      <Text style={styles.title}>All Teams</Text>
+      <FlatList
+        data={teams}
+        style={{ marginTop: 25, overflow: "scroll" }}
+        keyExtractor={(item) => item.key}
+        renderItem={({ item: team }) => (
+          <View style={styles.clientContainer}>
+            <TouchableOpacity
+              style={styles.cardContainer}
+              onPress={() => navigation.navigate("TeamScreen", { 
+                id: team.key,
+                name: team.name,
+                members: team.members,
+                })}
+            >
+              <Text style={styles.clientName}>{team.name}</Text>
             </TouchableOpacity>
           </View>
         )}
       />
     </SafeAreaView>
-  );
+  );  
 };
 
 export default ManageClientsScreen;
@@ -84,36 +128,23 @@ export default ManageClientsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  cardContainer: {
     backgroundColor: "#fff",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginTop: 25,
+    marginBottom: 15,
+    alignSelf: "center",
   },
   addClientBtn: {
     alignSelf: "center",
     backgroundColor: "#0792F9",
     width: "80%",
-    height: 30,
+    height: 40,
     borderRadius: 20,
-    marginTop: 25,
+    justifyContent: "center",
+    marginBottom: 20,
   },
   addClientBtnTxt: {
     textAlign: "center",
@@ -121,11 +152,11 @@ const styles = StyleSheet.create({
     color: "white",
   },
   clientContainer: {
-    justifyContent: 'center',
+    justifyContent: "center",
     borderRadius: 8,
     padding: 16,
     marginTop: 10,
-    width: 350,
+    marginHorizontal: 16,
   },
   clientName: {
     fontSize: 18,
@@ -135,5 +166,18 @@ const styles = StyleSheet.create({
   clientEmail: {
     fontSize: 16,
     color: "#666",
+  },
+  cardContainer: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
