@@ -12,8 +12,10 @@ import {
 import { getAuth } from "firebase/auth";
 import { doc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebase";
+import { useNavigation } from "@react-navigation/native";
 
 const AddNutritionScreen = () => {
+  const navigation = useNavigation();
   const [date, setDate] = useState("");
   const [mealPlanName, setMealPlanName] = useState("");
   const [notes, setNotes] = useState("");
@@ -202,6 +204,9 @@ const AddNutritionScreen = () => {
               <TouchableOpacity style={styles.addButton} onPress={addNutrition}>
                 <Text style={styles.addButtonText}>Submit</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
+                <Text style={styles.addButtonText}>Cancel</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -274,6 +279,12 @@ const styles = StyleSheet.create({
   },
   addButton: {
     backgroundColor: "#0792F9",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  cancelButton: {
+    backgroundColor: "#FF5722",
     padding: 10,
     borderRadius: 5,
     marginTop: 10,

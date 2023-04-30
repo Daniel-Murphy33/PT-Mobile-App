@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const TeamScreen = ({ route }) => {
   const { id, name, members } = route.params;
@@ -15,9 +16,18 @@ const TeamScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{ left: 20 }}
+      >
+        <Ionicons name="arrow-back" size={30} color="#0792F9" />
+      </TouchableOpacity>
       <Text style={styles.title}>{name}</Text>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("AssignAll")}>
         <Text style={styles.buttonText}>Assign All</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("AddMembers")}>
+        <Text style={styles.buttonText}>Add Members</Text>
       </TouchableOpacity>
       <FlatList
         data={members}
@@ -49,7 +59,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginTop: 25,
     marginBottom: 15,
     alignSelf: "center",
   },

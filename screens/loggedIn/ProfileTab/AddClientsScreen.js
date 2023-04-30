@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import { db } from "../../../firebase";
 import { getAuth } from "firebase/auth";
@@ -17,12 +17,15 @@ import {
   addDoc,
   collection,
 } from "firebase/firestore";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const AddClientsScreen = () => {
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [teamName, setTeamName] = useState("");
   const [members, setMembers] = useState([{ name: "", email: "" }]);
+  const navigation = useNavigation();
 
   // Create client in Firestore
   const addClient = async () => {
@@ -86,83 +89,91 @@ const AddClientsScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.section}>
-        <Text style={styles.sectionHeader}>Add Client</Text>
-        <Text style={styles.label}>Name:</Text>
-        <TextInput
-          style={styles.input}
-          value={clientName}
-          onChangeText={setClientName}
-          placeholder="Enter client name"
-        />
-        <Text style={styles.label}>Email:</Text>
-        <TextInput
-          style={styles.input}
-          value={clientEmail}
-          onChangeText={setClientEmail}
-          autoCapitalize="none"
-          placeholder="Enter client email"
-          keyboardType="email-address"
-        />
-        <TouchableOpacity style={styles.addButton} onPress={addClient}>
-          <Text style={styles.buttonText}>Add Client</Text>
+      <View>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={30} color="#0792F9" />
         </TouchableOpacity>
       </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Add Client</Text>
+          <Text style={styles.label}>Name:</Text>
+          <TextInput
+            style={styles.input}
+            value={clientName}
+            onChangeText={setClientName}
+            placeholder="Enter Client Name..."
+            placeholderTextColor={"grey"}
+          />
+          <Text style={styles.label}>Email:</Text>
+          <TextInput
+            style={styles.input}
+            value={clientEmail}
+            onChangeText={setClientEmail}
+            autoCapitalize="none"
+            placeholder="Enter Client Email..."
+            placeholderTextColor={"grey"}
+            keyboardType="email-address"
+          />
+          <TouchableOpacity style={styles.addButton} onPress={addClient}>
+            <Text style={styles.buttonText}>Add Client</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionHeader}>Add Team</Text>
-        <Text style={styles.label}>Name:</Text>
-        <TextInput
-          style={styles.input}
-          value={teamName}
-          onChangeText={setTeamName}
-          placeholder="Enter team name"
-        />
-        {members.map((member, index) => (
-          <View key={index} style={styles.member}>
-            <Text style={styles.label}>Member {index + 1}:</Text>
-            <View style={styles.memberInput}>
-              <TextInput
-                style={styles.memberName}
-                value={member.name}
-                onChangeText={(value) =>
-                  handleMemberChange(index, "name", value)
-                }
-                placeholder="Name..."
-                placeholderTextColor={"grey"}
-              />
-              <TextInput
-                style={styles.memberEmail}
-                placeholderTextColor={"grey"}
-                value={member.email}
-                onChangeText={(value) =>
-                  handleMemberChange(index, "email", value)
-                }
-                autoCapitalize="none"
-                placeholder="Email"
-                keyboardType="email-address"
-              />
-              <TouchableOpacity
-                style={styles.removeMemberButton}
-                onPress={() => handleRemoveMember(index)}
-              >
-                <Text style={styles.removeMemberButtonText}>-</Text>
-              </TouchableOpacity>
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Add Team</Text>
+          <Text style={styles.label}>Name:</Text>
+          <TextInput
+            style={styles.input}
+            value={teamName}
+            onChangeText={setTeamName}
+            placeholder="Enter Team Name..."
+            placeholderTextColor={"grey"}
+          />
+          {members.map((member, index) => (
+            <View key={index} style={styles.member}>
+              <Text style={styles.label}>Member {index + 1}:</Text>
+              <View style={styles.memberInput}>
+                <TextInput
+                  style={styles.memberName}
+                  value={member.name}
+                  onChangeText={(value) =>
+                    handleMemberChange(index, "name", value)
+                  }
+                  placeholder="Name..."
+                  placeholderTextColor={"grey"}
+                />
+                <TextInput
+                  style={styles.memberEmail}
+                  placeholderTextColor={"grey"}
+                  value={member.email}
+                  onChangeText={(value) =>
+                    handleMemberChange(index, "email", value)
+                  }
+                  autoCapitalize="none"
+                  placeholder="Email..."
+                  keyboardType="email-address"
+                />
+                <TouchableOpacity
+                  style={styles.removeMemberButton}
+                  onPress={() => handleRemoveMember(index)}
+                >
+                  <Text style={styles.removeMemberButtonText}>-</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ))}
-        <TouchableOpacity
-          style={styles.addMemberButton}
-          onPress={handleAddMember}
-        >
-          <Text style={styles.addMemberButtonText}>Add Member</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.addButton} onPress={addTeam}>
-          <Text style={styles.buttonText}>Add Team</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          ))}
+          <TouchableOpacity
+            style={styles.addMemberButton}
+            onPress={handleAddMember}
+          >
+            <Text style={styles.addMemberButtonText}>Add Member</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.addButton} onPress={addTeam}>
+            <Text style={styles.buttonText}>Add Team</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -182,7 +193,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 15,
-    alignSelf:'center',
+    alignSelf: "center",
     marginTop: 10,
   },
   label: {
@@ -260,4 +271,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
-

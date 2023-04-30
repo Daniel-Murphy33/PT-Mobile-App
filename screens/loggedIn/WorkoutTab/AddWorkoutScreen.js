@@ -280,6 +280,9 @@ const AddWorkoutScreen = () => {
             <TouchableOpacity style={styles.addButton} onPress={AddWorkout}>
               <Text style={styles.addButtonText}>Submit</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
+              <Text style={styles.addButtonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -355,6 +358,12 @@ const styles = StyleSheet.create({
   },
   addButton: {
     backgroundColor: "#0792F9",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  cancelButton: {
+    backgroundColor: "#FF5722",
     padding: 10,
     borderRadius: 5,
     marginTop: 10,

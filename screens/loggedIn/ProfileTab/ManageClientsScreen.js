@@ -3,7 +3,6 @@ import { getAuth } from "firebase/auth";
 import { collection, doc, onSnapshot, orderBy, query } from "firebase/firestore";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Button } from "react-native";
 import {
   StyleSheet,
   View,
@@ -11,9 +10,10 @@ import {
   TouchableOpacity,
   SafeAreaView,
   FlatList,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { db } from "../../../firebase";
+import { Ionicons } from "@expo/vector-icons";
+
 
 const ManageClientsScreen = () => {
   const navigation = useNavigation();
@@ -64,12 +64,11 @@ useEffect(() => {
   GetTeams();
 }, []); 
 
-  const AddClientScreen = () => {
-    navigation.navigate("AddClients");
-  };
-
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={{left:20}}>
+          <Ionicons name="arrow-back" size={30} color="#0792F9" />
+        </TouchableOpacity>
       <Text style={styles.title}>Manage Clients</Text>
       <TouchableOpacity
         style={styles.addClientBtn}

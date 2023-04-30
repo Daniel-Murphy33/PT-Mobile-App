@@ -35,6 +35,7 @@ import AssignedNutritionScreen from './screens/loggedIn/NutritionTab/AssignedNut
 import WeightHistoryScreen from './screens/loggedIn/AnalyticsTab/WeightHistoryScreen';
 import TeamScreen from './screens/loggedIn/ProfileTab/TeamScreen';
 import AssignAllScreen from'./screens/loggedIn/ProfileTab/AssignAllScreen'
+import AddMembersScreen from './screens/loggedIn/ProfileTab/AddMembersScreen'
 
 export default function App() {
 
@@ -139,6 +140,10 @@ export default function App() {
               component={TeamScreen}
               options={{headerShown:false}}
             />
+            <Stack.Screen name="AddMembers"
+              component={AddMembersScreen}
+              options={{headerShown:false}}
+            />
             <Stack.Screen name="AssignAll"
               component={AssignAllScreen}
               options={{headerShown:false}}
@@ -225,6 +230,10 @@ export default function App() {
             />
             <Stack.Screen name="TeamScreen"
               component={TeamScreen}
+              options={{headerShown:false}}
+            />
+            <Stack.Screen name="AddMembers"
+              component={AddMembersScreen}
               options={{headerShown:false}}
             />
             <Stack.Screen name="AssignAll"
