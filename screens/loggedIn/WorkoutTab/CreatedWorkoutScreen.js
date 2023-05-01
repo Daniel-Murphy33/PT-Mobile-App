@@ -8,10 +8,34 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { getAuth } from "firebase/auth";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
 
 const CreatedWorkout = ({ route, navigation }) => {
-  const { day, exercises, name, trainingType, notes, id } = route.params;
+  const { day, exercises, name, trainingType, notes, id, isCompleted } = route.params;
+  const [completed, setCompleted] = useState(isCompleted);
+  const user = getAuth().currentUser;
+  
 
+  const handleCompleteWorkout = async () => {
+    try {
+      if (user) {
+        const workoutDocRef = doc(db, `users/${user.uid}/workouts/${id}`);
+  
+        const newCompletionStatus = !completed;
+        await updateDoc(workoutDocRef, {
+          isCompleted: newCompletionStatus,
+          completedAt: serverTimestamp(),
+        });
+      }
+    } catch (error) {
+      console.error("Error marking workout as complete: ", error);
+    }
+    setCompleted(!completed);
+  };
+  
   const handleExercisePress = (exercise) => {
     const currentIndex = exercises.findIndex((item) => item.id === exercise.id);
     navigation.navigate("CreatedExerciseScreen", {
@@ -29,21 +53,33 @@ const CreatedWorkout = ({ route, navigation }) => {
         <Text style={styles.header}>{day}</Text>
         <View style={{ width: 24 }}></View>
       </View>
-      <TouchableOpacity
-      style={styles.editButton}
-        onPress={() =>
-          navigation.navigate("Edit Workout", {
-            day,
-            id,
-            exercises,
-            name,
-            trainingType,
-            notes,
-          })
-        }
-      >
-        <Text style={styles.editButtonText}>Edit Workout</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() =>
+            navigation.navigate("Edit Workout", {
+              day,
+              id,
+              exercises,
+              name,
+              trainingType,
+              notes,
+            })
+          }
+        >
+          <Text style={styles.editButtonText}>Edit Workout</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleCompleteWorkout}>
+          <View style={styles.completedContainer}>
+            <Ionicons
+              name={completed ? "checkmark-circle" : "checkmark-circle-outline"}
+              size={30}
+              color={completed ? "green" : "gray"}
+            />
+            <Text style={styles.checkTxt}>Completed</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
       <View style={styles.workoutContainer}>
         <Text style={styles.workoutTitle}>
           {name} - {trainingType}
@@ -130,6 +166,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   exerciseContainer: {
     marginVertical: 10,
   },
@@ -153,7 +194,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   editButtonText: {
-    textAlign: 'center',
+    textAlign: "center",
     color: "white",
   },
   notesContainer: {
@@ -177,5 +218,12 @@ const styles = StyleSheet.create({
   },
   notesText: {
     fontSize: 16,
+  },
+  checkTxt: {
+    marginLeft: 5,
+  },
+  completedContainer: {
+    flexDirection: "column",
+    alignItems: "center",
   },
 });

@@ -25,7 +25,8 @@ const AllWorkoutScreen = () => {
   return (
     <SafeAreaView style={styles.heading}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        {/* heading */}
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{right:15}}>
           <Ionicons name="arrow-back" size={30} color="#0792F9" />
         </TouchableOpacity>
         <Text style={styles.heading}>Workout List</Text>

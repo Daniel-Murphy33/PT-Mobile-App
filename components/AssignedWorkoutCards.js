@@ -118,7 +118,7 @@ const AssignedWorkoutCards = () => {
                   navigation.navigate("CreatedWorkout", {
                     day: item.day,
                     exercises: item.exercises,
-                    id: item.id,
+                    id: item.key,
                     name: item.name,
                     trainingType: item.trainingType,
                     client: item.client,

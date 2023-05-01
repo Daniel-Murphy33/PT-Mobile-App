@@ -89,7 +89,6 @@ const WorkoutCards = () => {
           newWorkouts.push({ ...doc.data(), key: doc.id });
         });
         setWorkouts(newWorkouts);
-        console.log(newWorkouts);
       });
       return () => subscriber();
     }
@@ -122,6 +121,7 @@ const WorkoutCards = () => {
                     name: item.name,
                     trainingType: item.trainingType,
                     notes: item.notes,
+                    isCompleted: item.isCompleted
                   })
                 }
               >
