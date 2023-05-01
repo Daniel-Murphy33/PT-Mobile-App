@@ -10,9 +10,10 @@
 4. **Institution:** SETU Carlow
 5. **Date:** 14/11/22
 
-6. **How to install project:**
+6. **How to install & run project:**
    - Clone the repository
    - Run `npm install` to install all packages and dependencies.
+   - Run `expo start` to run the server. (Scan QR code in terminal to open project).
 
 7. **List of any required Libraries, platform issues, etc.:**
    - **React Native** - Framework
