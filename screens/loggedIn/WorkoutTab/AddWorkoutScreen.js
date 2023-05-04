@@ -94,6 +94,7 @@ const AddWorkoutScreen = () => {
       } catch (e) {
         console.log(e);
       }
+      navigation.goBack();
     }
   };
 

@@ -45,6 +45,7 @@ const AddClientsScreen = () => {
       setClientName("");
       setClientEmail("");
     }
+    navigation.goBack();
   };
 
   // Create team in Firestore
@@ -65,6 +66,7 @@ const AddClientsScreen = () => {
       setTeamName("");
       setMembers([{ name: "", email: "" }]);
     }
+    navigation.goBack();
   };
 
   // Handle adding or removing a member

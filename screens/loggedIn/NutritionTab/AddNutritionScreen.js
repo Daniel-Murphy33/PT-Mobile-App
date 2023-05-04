@@ -66,6 +66,7 @@ const AddNutritionScreen = () => {
       setNotes("");
       console.log(meals);
     }
+    navigation.goBack();
   };
 
   return (

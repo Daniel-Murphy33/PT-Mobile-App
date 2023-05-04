@@ -33,7 +33,7 @@ const RegisterScreen = () => {
   const [age, setAge] = useState("");
   const [currentWeight, setCurrentWeight] = useState("");
   const [goalWeight, setGoalWeight] = useState("");
-
+  const [calorieLimit, setCalorieLimit] = useState("");
   const navigation = useNavigation();
 
   //navigating to screens
@@ -49,7 +49,7 @@ const RegisterScreen = () => {
   //function for signing up
 const handleSignUp = async () => {
 
-  if (!email || !password || !firstName || !lastName || !age || !currentWeight || !goalWeight || !value) {
+  if (!email || !password || !firstName || !lastName || !age || !currentWeight || !goalWeight || !value || !calorieLimit) {
     alert("Please fill in all fields");
     return;
   }
@@ -75,6 +75,7 @@ const handleSignUp = async () => {
           age: age,
           currentWeight: currentWeight,
           goalWeight: goalWeight,
+          calorieLimit: calorieLimit,
         });
 
         // Create a new weights collection for the user
@@ -105,7 +106,7 @@ const handleSignUp = async () => {
           />
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Email"
+              placeholder="Email..."
               autoCapitalize='none'
               placeholderTextColor="black"
               keyboardType="email-address"
@@ -114,7 +115,7 @@ const handleSignUp = async () => {
               style={styles.input}
             />
             <TextInput
-              placeholder="Password"
+              placeholder="Password..."
               placeholderTextColor="black"
               value={password}
               onChangeText={(text) => setPassword(text)}
@@ -123,58 +124,60 @@ const handleSignUp = async () => {
             />
             <DropDownPicker
               style={styles.dropdown}
-              placeholder={"Select an Account Type"}
+              placeholder={"Select an Account Type..."}
               open={open}
               value={value}
               items={items}
               setOpen={setOpen}
               setValue={setValue}
               setItems={setItems}
-              required={true}
               listMode="SCROLLVIEW"
             />
             <TextInput
-              placeholder="First Name"
+              placeholder="First Name..."
               placeholderTextColor="black"
               value={firstName}
               onChangeText={(text) => setFirstName(text)}
               style={styles.input}
-              required={true}
             />
             <TextInput
-              placeholder="Last Name"
+              placeholder="Last Name..."
               placeholderTextColor="black"
               value={lastName}
               onChangeText={(text) => setLastName(text)}
               style={styles.input}
-              required={true}
             />
             <TextInput
-              placeholder="Age"
+              placeholder="Age..."
               placeholderTextColor="black"
               keyboardType="numeric"
               value={age}
               onChangeText={(text) => setAge(text)}
               style={styles.input}
-              required={true}
             />
             <TextInput
-              placeholder="Current Weight"
+              placeholder="Current Weight..."
               placeholderTextColor="black"
               keyboardType="numeric"
               value={currentWeight}
               onChangeText={(text) => setCurrentWeight(text)}
               style={styles.input}
-              required={true}
             />
             <TextInput
-              placeholder="Goal Weight"
+              placeholder="Goal Weight..."
               placeholderTextColor="black"
               keyboardType="numeric"
               value={goalWeight}
               onChangeText={(text) => setGoalWeight(text)}
               style={styles.input}
-              required={true}
+            />
+            <TextInput
+              placeholder="Daily Calorie Allowance..."
+              placeholderTextColor="black"
+              keyboardType="numeric"
+              value={calorieLimit}
+              onChangeText={(text) => setCalorieLimit(text)}
+              style={styles.input}
             />
           </View>
 

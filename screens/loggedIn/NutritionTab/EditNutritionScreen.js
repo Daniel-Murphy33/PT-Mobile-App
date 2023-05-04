@@ -36,7 +36,7 @@ const EditNutritionScreen = ({ route, navigation }) => {
           createdAt: serverTimestamp(),
         });
         console.log("Updated successfully");
-        navigation.navigate("AllNutrition");
+        navigation.goBack();
       }
     } catch (error) {
       console.error("Error updating workout: ", error);

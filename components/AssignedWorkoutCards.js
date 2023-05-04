@@ -130,7 +130,10 @@ const AssignedWorkoutCards = () => {
                     id: item.key,
                     name: item.name,
                     trainingType: item.trainingType,
+                    notes: item.notes,
                     client: item.client,
+                    isCompleted: item.isCompleted,
+                    isAssigned: true,
                   })
                 }
               >

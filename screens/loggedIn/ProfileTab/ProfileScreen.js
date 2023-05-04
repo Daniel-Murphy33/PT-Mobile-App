@@ -148,6 +148,10 @@ const ProfileScreen = () => {
           <Text style={styles.aboutUserLabel}>Goal Weight:</Text>{" "}
           {user.goalWeight}
         </Text>
+        <Text style={styles.aboutUser}>
+          <Text style={styles.aboutUserLabel}>Daily Calorie Allowance:</Text>{" "}
+          {user.calorieLimit}
+        </Text>
       </View>
 
       <View style={styles.userBtnWrapper}>

@@ -116,6 +116,8 @@ const RecentWorkoutCard = () => {
                   id: item.key,
                   name: item.name,
                   trainingType: item.trainingType,
+                  isCompleted: item.isCompleted,
+                  isAssigned: false,
                 })
               }
             >

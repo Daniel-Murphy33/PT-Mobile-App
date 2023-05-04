@@ -14,7 +14,7 @@ import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 const CreatedWorkout = ({ route, navigation }) => {
-  const { day, exercises, name, trainingType, notes, id, isCompleted } = route.params;
+  const { day, exercises, name, trainingType, notes, id, isCompleted, isAssigned } = route.params;
   const [completed, setCompleted] = useState(isCompleted);
   const user = getAuth().currentUser;
   
@@ -22,7 +22,14 @@ const CreatedWorkout = ({ route, navigation }) => {
   const handleCompleteWorkout = async () => {
     try {
       if (user) {
-        const workoutDocRef = doc(db, `users/${user.uid}/workouts/${id}`);
+        let workoutDocRef;
+        
+        // Check if the workout is assigned or user-created
+        if (isAssigned) {
+          workoutDocRef = doc(db, `workouts/${id}`);
+        } else {
+          workoutDocRef = doc(db, `users/${user.uid}/workouts/${id}`);
+        }
   
         const newCompletionStatus = !completed;
         await updateDoc(workoutDocRef, {
@@ -34,7 +41,7 @@ const CreatedWorkout = ({ route, navigation }) => {
       console.error("Error marking workout as complete: ", error);
     }
     setCompleted(!completed);
-  };
+  };  
   
   const handleExercisePress = (exercise) => {
     const currentIndex = exercises.findIndex((item) => item.id === exercise.id);

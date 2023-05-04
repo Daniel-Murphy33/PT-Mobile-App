@@ -15,6 +15,7 @@ const EditUserScreen = () => {
   const [newAge, setNewAge] = useState(user.age);
   const [newCurrentWeight, setNewCurrentWeight] = useState(user.currentWeight);
   const [newGoalWeight, setNewGoalWeight] = useState(user.goalWeight);
+  const [newCalorieLimit, setNewCalorieLimit] = useState(user.calorieLimit);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -26,6 +27,7 @@ const EditUserScreen = () => {
       setNewAge(userData.age || "");
       setNewCurrentWeight(userData.currentWeight || "");
       setNewGoalWeight(userData.goalWeight || "");
+      setNewCalorieLimit(userData.calorieLimit || "");
     };
     fetchUserProfile();
   }, []);
@@ -55,15 +57,14 @@ const EditUserScreen = () => {
           age: newAge,
           currentWeight: newCurrentWeight,
           goalWeight: newGoalWeight,
+          calorieLimit: newCalorieLimit,
         });
   
         // Add a new weight entry if the current weight has changed
         if (newCurrentWeight !== user.currentWeight) {
           await addWeightEntry();
         }
-  
-        console.log("Updated successfully");
-        navigation.goBack();
+          navigation.goBack();
       }
     } catch (error) {
       console.error("Error updating workout: ", error);
@@ -113,6 +114,14 @@ const EditUserScreen = () => {
             style={styles.input}
             value={newGoalWeight}
             onChangeText={setNewGoalWeight}
+          />
+        </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Daily Calorie Allowance</Text>
+          <TextInput
+            style={styles.input}
+            value={newCalorieLimit}
+            onChangeText={setNewCalorieLimit}
           />
         </View>
         <View style={styles.buttonGroup}>

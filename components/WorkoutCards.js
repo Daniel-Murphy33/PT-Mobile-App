@@ -121,7 +121,8 @@ const WorkoutCards = () => {
                     name: item.name,
                     trainingType: item.trainingType,
                     notes: item.notes,
-                    isCompleted: item.isCompleted
+                    isCompleted: item.isCompleted,
+                    isAssigned: false,
                   })
                 }
               >
