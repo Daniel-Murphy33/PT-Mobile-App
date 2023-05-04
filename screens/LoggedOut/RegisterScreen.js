@@ -48,6 +48,12 @@ const RegisterScreen = () => {
 
   //function for signing up
 const handleSignUp = async () => {
+
+  if (!email || !password || !firstName || !lastName || !age || !currentWeight || !goalWeight || !value) {
+    alert("Please fill in all fields");
+    return;
+  }
+
   auth
     .createUserWithEmailAndPassword(email, password)
     .then(async (UserCredentials) => {
