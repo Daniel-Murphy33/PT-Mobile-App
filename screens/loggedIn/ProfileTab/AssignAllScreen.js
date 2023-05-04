@@ -23,7 +23,7 @@ import { db } from "../../../firebase";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect } from "react";
 
-const FormOne = ({ members }) => {
+const FormOne = () => {
   const route = useRoute(); 
   const navigation = useNavigation();
   // for dropdown
@@ -233,8 +233,8 @@ const FormOne = ({ members }) => {
   );
 };
 
-const FormTwo = (members) => {
-  const route = useRoute(); 
+const FormTwo = () => {
+  const route = useRoute();
   const navigation =useNavigation();
   const [date, setDate] = useState("");
   const [mealPlanName, setMealPlanName] = useState("");

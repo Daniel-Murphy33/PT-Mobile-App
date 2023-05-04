@@ -20,12 +20,12 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebase";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect } from "react";
 
 const FormOne = () => {
   const route = useRoute(); 
-
+  const navigation = useNavigation();
   // for dropdown
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -83,7 +83,7 @@ const FormOne = () => {
       setDay("");
       setName("");
       setExercises([{ name: "" }]);
-      console.log(exercises);
+      navigation.goBack();
     }
   };
 
@@ -235,6 +235,7 @@ const FormOne = () => {
 
 const FormTwo = () => {
   const route = useRoute(); 
+  const navigation = useNavigation();
   const [date, setDate] = useState("");
   const [mealPlanName, setMealPlanName] = useState("");
   const [meals, setMeals] = useState([
@@ -296,7 +297,7 @@ const FormTwo = () => {
       setDate("");
       setMealPlanName("");
       setMeals([{ name: "" }]);
-      console.log(meals);
+      navigation.goBack();
     }
   };
 

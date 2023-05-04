@@ -46,11 +46,6 @@ const TeamScreen = ({ route }) => {
       }
     }
   };
-  
-  const getMembers = () => {
-    return members;
-  };
-  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -59,7 +54,7 @@ const TeamScreen = ({ route }) => {
       </TouchableOpacity>
       <Text style={styles.title}>{name}</Text>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("AssignAll", {
-        getMembers: getMembers,
+        members: members,
       })}>
         <Text style={styles.buttonText}>Assign All</Text>
       </TouchableOpacity>

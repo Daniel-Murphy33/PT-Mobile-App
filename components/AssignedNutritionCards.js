@@ -35,10 +35,7 @@ const renderRightActions = (progress, dragX, item) => {
   return (
     <TouchableOpacity
       style={styles.deleteBtn}
-      onPress={() => {
-        const docRef = doc(db, "users", user.uid, "nutrition", item.key);
-        deleteDoc(docRef);
-      }}
+      onPress={() => DeleteNutrition(item)}
     >
       <Ionicons name="trash-bin" size={40} color="red" />
       <Animated.Text
@@ -55,12 +52,12 @@ const renderRightActions = (progress, dragX, item) => {
   );
 };
 
-const DeleteUser = (item) => {
+const DeleteNutrition = (item) => {
   const user = getAuth().currentUser;
 
   Alert.alert(
-    "Delete Account",
-    "Are you sure you want to delete this meal plan?",
+    "Delete Workout",
+    "Are you sure you want to delete this workout?",
     [
       {
         text: "Cancel",
@@ -69,7 +66,7 @@ const DeleteUser = (item) => {
       {
         text: "Delete",
         onPress: () => {
-          const docRef = doc(db, "users", user.uid, "nutrition", item.key);
+          const docRef = doc(db, "nutrition", item.key);
           deleteDoc(docRef);
         },
       },
@@ -85,17 +82,25 @@ const AssignedNutritionCards = () => {
 
   // getting from firestore
   const GetNutrition = async () => {
-    // get user
     if (user) {
-      const colRef = collection(db, "nutrition"); 
-      const q = await query(colRef, where("client", "==", user.email));
+      const colRef = collection(db, "nutrition");
+      const q = query(colRef);
       const subscriber = onSnapshot(q, (snapshot) => {
         let newNutrition = [];
         snapshot.docs.forEach((doc) => {
-          newNutrition.push({ ...doc.data(), key: doc.id });
+          const nutritionData = doc.data();
+          console.log("Fetched nutrition data:", nutritionData);
+  
+          const clientsArray = nutritionData.clients || [];
+          if (
+            nutritionData.client === user.email ||
+            clientsArray.some((client) => client.email === user.email)
+          ) {
+            newNutrition.push({ ...nutritionData, key: doc.id });
+          }
         });
         setNutrition(newNutrition);
-        console.log(newNutrition);
+        console.log("Filtered nutrition:", newNutrition);
       });
       return () => subscriber();
     }

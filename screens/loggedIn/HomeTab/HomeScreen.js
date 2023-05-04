@@ -10,8 +10,6 @@ const HomeScreen = () => {
 
   const user = getAuth().currentUser;
 
-
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerBlockWrapper}>

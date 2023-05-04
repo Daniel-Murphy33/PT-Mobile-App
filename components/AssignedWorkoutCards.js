@@ -17,6 +17,7 @@ import {
   orderBy,
   query,
   where,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
@@ -79,22 +80,30 @@ const AssignedWorkoutCards = () => {
 
   // getting from firestore
   const GetWorkout = async () => {
-    // get user
     if (user) {
       const colRef = collection(db, "workouts");
-      const q = await query(colRef, where("client", "==", user.email));
+      const q = query(colRef);
       const subscriber = onSnapshot(q, (snapshot) => {
         let newWorkouts = [];
         snapshot.docs.forEach((doc) => {
-          newWorkouts.push({ ...doc.data(), key: doc.id });
+          const workoutData = doc.data();
+          console.log("Fetched workout data:", workoutData);
+  
+          const clientsArray = workoutData.clients || [];
+          if (
+            workoutData.client === user.email ||
+            clientsArray.some((client) => client.email === user.email)
+          ) {
+            newWorkouts.push({ ...workoutData, key: doc.id });
+          }
         });
         setWorkouts(newWorkouts);
-        console.log(newWorkouts);
+        console.log("Filtered workouts:", newWorkouts);
       });
       return () => subscriber();
     }
   };
-
+  
   useEffect(() => {
     GetWorkout();
   }, []);
