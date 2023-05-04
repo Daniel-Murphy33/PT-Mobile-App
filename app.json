@@ -1,6 +1,6 @@
 {
   "expo": {
-    "slug": "fitness-bro",
+    "slug": "frontend",
     "name": "FitnessBro - Final Year Project",
     "sdkVersion": "47.0.0",
     "extra": {
@@ -10,6 +10,9 @@
     },
     "ios": {
       "bundleIdentifier": "fitness-bro"
+    },
+    "android": {
+      "package": "com.danmurphy12.fitness_bro"
     }
   },
   "name": "FitnessBro - Final Year Project"
