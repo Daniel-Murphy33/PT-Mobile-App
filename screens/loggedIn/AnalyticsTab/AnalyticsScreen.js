@@ -71,6 +71,9 @@ const AnalyticsScreen = () => {
 
   const today = new Date();
   const todayNutrition = nutritionData.find((item) => {
+    if (!item.createdAt) {
+      return false;
+    }
     const itemDate = item.createdAt.toDate();
     return (
       itemDate.getFullYear() === today.getFullYear() &&
