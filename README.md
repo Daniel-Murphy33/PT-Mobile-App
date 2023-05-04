@@ -21,4 +21,3 @@
    - **Node.js** - npm Package Manager
    - **VS Code** - Editor
    - **git** - For tracking and committing code
-   - **doxygen** - Code documentation
