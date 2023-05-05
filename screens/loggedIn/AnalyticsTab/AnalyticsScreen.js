@@ -1,3 +1,10 @@
+/**
+ * AnalyticsScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -21,6 +28,11 @@ import {
 import { db } from "../../../firebase";
 import { getAuth } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
+
+/**
+ * Analytics Tab Screen 
+ * @returns {React.Component}
+ */ 
 
 const AnalyticsScreen = () => {
   const userCred = getAuth().currentUser;

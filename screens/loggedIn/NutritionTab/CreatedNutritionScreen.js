@@ -1,3 +1,10 @@
+/**
+ * CreatedNutritionScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import React from "react";
 import {
   View,
@@ -9,6 +16,11 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+
+/**
+ * Created Nutrition screen 
+ * @returns {React.Component}
+ */ 
 
 const CreatedNutritionScreen = ({ route }) => {
   const { date, notes, meals, id, name } = route.params;

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/loggedIn/NutritionTab/EditNutritionScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/loggedIn/NutritionTab/EditNutritionScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * EditNutritionScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { getAuth } from "firebase/auth";
+import { serverTimestamp, doc, setDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
+
+/**
+ * Edit Nutrition screen 
+ * @returns {React.Component}
+ */ 
+
+const EditNutritionScreen = ({ route, navigation }) => {
+  const { date, meals, name, notes, id } = route.params;
+
+  const user = getAuth().currentUser;
+  const [newDate, setNewDate] = useState(date);
+  const [newName, setNewName] = useState(name);
+  const [newMeals, setNewMeals] = useState([...meals]);
+  const [newNotes, setNewNotes] = useState(notes);
+
+  const handleSave = async () => {
+    try {
+      if (user) {
+        const docRef = doc(db, `users/${user.uid}/nutrition/${id}`);
+
+        await setDoc(docRef, {
+          mealPlanName: newName,
+          date: newDate,
+          notes: newNotes,
+          meals: newMeals,
+          createdAt: serverTimestamp(),
+        });
+        console.log("Updated successfully");
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error("Error updating workout: ", error);
+    }
+  };
+
+  return (
+    &lt;KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      &lt;ScrollView>
+        &lt;View style={styles.headerContainer}>
+          &lt;TouchableOpacity onPress={() => navigation.goBack()}>
+            &lt;Ionicons name="arrow-back" size={30} color="#0792F9" />
+          &lt;/TouchableOpacity>
+          &lt;Text style={styles.header}>Edit Meal Plan&lt;/Text>
+          &lt;View style={{ width: 24 }}>&lt;/View>
+        &lt;/View>
+        &lt;View style={styles.inputGroup}>
+          &lt;Text style={styles.label}>Date:&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            value={newDate}
+            onChangeText={setNewDate}
+          />
+        &lt;/View>
+        &lt;View style={styles.inputGroup}>
+          &lt;Text style={styles.label}>Name:&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            value={newName}
+            onChangeText={setNewName}
+          />
+        &lt;/View>
+        &lt;View style={styles.exercisesContainer}>
+          &lt;Text style={styles.label}>Meals:&lt;/Text>
+          {newMeals.map((meal, index) => (
+            &lt;View key={index} style={styles.exerciseItem}>
+              &lt;Text style={styles.exerciseLabel}>Meal {index + 1}&lt;/Text>
+
+              &lt;View style={styles.inputContainer}>
+                &lt;Text style={styles.label}>Name:&lt;/Text>
+                &lt;TextInput
+                  style={styles.input}
+                  value={meal.name}
+                  onChangeText={(text) => {
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].name = text;
+                    setNewMeals(updatedMeals);
+                  }}
+                />
+              &lt;/View>
+
+              &lt;View style={styles.inputContainer}>
+                &lt;Text style={styles.label}>Serving Size:&lt;/Text>
+                &lt;TextInput
+                  style={styles.input}
+                  value={meal.servingSize}
+                  onChangeText={(text) => {
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].servingSize = text;
+                    setNewMeals(updatedMeals);
+                  }}
+                />
+              &lt;/View>
+
+              &lt;View style={styles.inputContainer}>
+                &lt;Text style={styles.label}>Calories:&lt;/Text>
+                &lt;TextInput
+                  style={styles.input}
+                  value={meal.calories}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].calories = text;
+                    setNewMeals(updatedMeals);
+                  }}
+                />
+              &lt;/View>
+
+              &lt;View style={styles.inputContainer}>
+                &lt;Text style={styles.label}>Fat:&lt;/Text>
+                &lt;TextInput
+                  style={styles.input}
+                  value={meal.fat}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].fat = text;
+                    setNewMeals(updatedMeals);
+                  }}
+                />
+              &lt;/View>
+
+              &lt;View style={styles.inputContainer}>
+                &lt;Text style={styles.label}>Carbohydrates:&lt;/Text>
+                &lt;TextInput
+                  style={styles.input}
+                  value={meal.carbohydrates}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].carbohydrates = text;
+                    setNewMeals(updatedMeals);
+                  }}
+                />
+              &lt;/View>
+
+              &lt;View style={styles.inputContainer}>
+                &lt;Text style={styles.label}>Protein:&lt;/Text>
+                &lt;TextInput
+                  style={styles.input}
+                  value={meal.protein}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    const updatedMeals = [...newMeals];
+                    updatedMeals[index].protein = text;
+                    setNewMeals(updatedMeals);
+                  }}
+                />
+              &lt;/View>
+            &lt;/View>
+          ))}
+          &lt;TouchableOpacity
+            style={styles.addButton}
+            onPress={() => {
+              const newMeal = {
+                name: "",
+                servingSize: "",
+                calories: "",
+                carbohydrates: "",
+                fat: "",
+                protein: "",
+              };
+              setNewMeals([...newMeals, newMeal]);
+            }}
+          >
+            &lt;Text style={styles.addButtonLabel}>+ Add Meal&lt;/Text>
+          &lt;/TouchableOpacity>
+          {newMeals.length > 0 &amp;&amp; (
+            &lt;TouchableOpacity
+              style={styles.removeButton}
+              onPress={() => {
+                const newMealsList = [...newMeals];
+                newMealsList.pop();
+                setNewMeals(newMealsList);
+              }}
+            >
+              &lt;Text style={styles.removeButtonLabel}>- Remove Meal&lt;/Text>
+            &lt;/TouchableOpacity>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputGroup}>
+          &lt;Text style={styles.label}>Notes:&lt;/Text>
+          &lt;TextInput
+            style={styles.textArea}
+            value={newNotes}
+            onChangeText={setNewNotes}
+            multiline
+          />
+        &lt;/View>
+        &lt;TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          &lt;Text style={styles.saveButtonText}>Save&lt;/Text>
+        &lt;/TouchableOpacity>
+      &lt;/ScrollView>
+    &lt;/KeyboardAvoidingView>
+  );
+};
+
+export default EditNutritionScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F2F2F2",
+    marginTop: 20,
+    padding: 25,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 35,
+  },
+  inputContainer: {
+    marginBottom: 10,
+  },
+  header: {
+    fontSize: 30,
+    fontWeight: "bold",
+    textAlign: "center",
+    flex: 1,
+    marginLeft: 10,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  input: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    fontSize: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  textArea: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    fontSize: 16,
+    minHeight: 100,
+    textAlignVertical: "top",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  saveButton: {
+    backgroundColor: "#0792F9",
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  saveButtonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  exercisesContainer: {
+    marginTop: 20,
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginBottom: 20,
+  },
+  exerciseItem: {
+    marginBottom: 20,
+    padding: 20,
+    backgroundColor: "#F2F2F2",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  exerciseLabel: {
+    fontSize: 16,
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
+  exerciseInput: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    fontSize: 16,
+  },
+  addButton: {
+    backgroundColor: '#0792F9',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  addButtonLabel: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  removeButton: {
+    backgroundColor: '#FF4136',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  removeButtonLabel: {
+    color: '#fff',
+    fontSize: 16,
+  },  
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddClientsScreen">AddClientsScreen</a></li><li><a href="global.html#AddNutritionScreen">AddNutritionScreen</a></li><li><a href="global.html#AddWorkoutScreen">AddWorkoutScreen</a></li><li><a href="global.html#AllNutritionScreen">AllNutritionScreen</a></li><li><a href="global.html#AllWorkoutScreen">AllWorkoutScreen</a></li><li><a href="global.html#AnalyticsScreen">AnalyticsScreen</a></li><li><a href="global.html#AssignedWorkoutScreen">AssignedWorkoutScreen</a></li><li><a href="global.html#CreatedExerciseScreen">CreatedExerciseScreen</a></li><li><a href="global.html#CreatedNutritionScreen">CreatedNutritionScreen</a></li><li><a href="global.html#CreatedWorkout">CreatedWorkout</a></li><li><a href="global.html#EditNutritionScreen">EditNutritionScreen</a></li><li><a href="global.html#EditUserScreen">EditUserScreen</a></li><li><a href="global.html#ForgotPasswordScreen">ForgotPasswordScreen</a></li><li><a href="global.html#FormOne">FormOne</a></li><li><a href="global.html#HomeExerciseScreen">HomeExerciseScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#HomeWorkoutScreen">HomeWorkoutScreen</a></li><li><a href="global.html#JumpingJacks">JumpingJacks</a></li><li><a href="global.html#LoginScreen">LoginScreen</a></li><li><a href="global.html#ManageClientsScreen">ManageClientsScreen</a></li><li><a href="global.html#NutritionScreen">NutritionScreen</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegisterScreen">RegisterScreen</a></li><li><a href="global.html#TeamScreen">TeamScreen</a></li><li><a href="global.html#WeightHistoryScreen">WeightHistoryScreen</a></li><li><a href="global.html#WorkoutScreen">WorkoutScreen</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 05 2023 15:09:48 GMT+0100 (Irish Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

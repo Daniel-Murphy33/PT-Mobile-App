@@ -1,10 +1,21 @@
+/**
+ * EditUserScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, KeyboardAvoidingView, ScrollView } from "react-native";
-
 import { getAuth } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useNavigation } from "@react-navigation/native";
+
+/**
+ * Edit User Profile Screen
+ * @returns {React.Component}
+ */
 
 const EditUserScreen = () => {
   const userCred = getAuth().currentUser;

@@ -1,3 +1,10 @@
+/**
+ * SingleClientScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -22,6 +29,11 @@ import {
 import { db } from "../../../firebase";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect } from "react";
+
+/**
+ * Single client Screen - add workout or nutrition here
+ * @returns {React.Component}
+ */
 
 const FormOne = () => {
   const route = useRoute(); 

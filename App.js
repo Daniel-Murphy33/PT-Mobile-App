@@ -1,3 +1,10 @@
+/**
+ * App.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import { StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -64,8 +71,7 @@ export default function App() {
     })
   }, [])
 
-
-  // Function to create the bottom tabs with icons
+  /** Function to create the bottom tabs with icons */
   function HomeTabs () {
     return (
     <Tab.Navigator
@@ -122,7 +128,7 @@ export default function App() {
           </Tab.Navigator>
   )}
   
-    // Screens for account type trainer
+    /** Screens for account type trainer*/
     if(isLoggedIn==true) {
       if(userData.role == "trainer")
       {
@@ -213,7 +219,7 @@ export default function App() {
         </NavigationContainer>
       )
       }
-      // Screens for account type General User
+      /** Screens for account type General User */
       else {
         return (
           <NavigationContainer>
@@ -301,7 +307,7 @@ export default function App() {
       }
       
     }
-    // show logged out screens
+    /** show logged out screens */
     else {
       return (
         <NavigationContainer>

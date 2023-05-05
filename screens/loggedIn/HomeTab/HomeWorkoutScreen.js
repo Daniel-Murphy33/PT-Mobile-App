@@ -1,8 +1,19 @@
+/**
+ * HomeWorkoutScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons';
 
+/**
+ * Home Workout screen
+ * @returns {React.Component}
+ */
 const HomeWorkoutScreen = () => {
 
     const route = useRoute();

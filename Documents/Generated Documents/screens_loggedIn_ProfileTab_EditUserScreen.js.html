@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/loggedIn/ProfileTab/EditUserScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/loggedIn/ProfileTab/EditUserScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * EditUserScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, KeyboardAvoidingView, ScrollView } from "react-native";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { useNavigation } from "@react-navigation/native";
+
+/**
+ * Edit User Profile Screen
+ * @returns {React.Component}
+ */
+
+const EditUserScreen = () => {
+  const userCred = getAuth().currentUser;
+  const [user, setUser] = useState({});
+  const navigation = useNavigation();
+  const [newFirstName, setNewFirstName] = useState(user.firstName);
+  const [newLastName, setNewLastName] = useState(user.lastName);
+  const [newAge, setNewAge] = useState(user.age);
+  const [newCurrentWeight, setNewCurrentWeight] = useState(user.currentWeight);
+  const [newGoalWeight, setNewGoalWeight] = useState(user.goalWeight);
+  const [newCalorieLimit, setNewCalorieLimit] = useState(user.calorieLimit);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const userRef = doc(db, "users", userCred.uid);
+      const userSnapshot = await getDoc(userRef);
+      const userData = userSnapshot.data();
+      setNewFirstName(userData.firstName || "");
+      setNewLastName(userData.lastName || "");
+      setNewAge(userData.age || "");
+      setNewCurrentWeight(userData.currentWeight || "");
+      setNewGoalWeight(userData.goalWeight || "");
+      setNewCalorieLimit(userData.calorieLimit || "");
+    };
+    fetchUserProfile();
+  }, []);
+
+  const addWeightEntry = async () => {
+    try {
+      const weightEntry = {
+        date: new Date(),
+        weight: newCurrentWeight,
+      };
+      await setDoc(doc(db, `users/${userCred.uid}/weights`, weightEntry.date.toISOString()), weightEntry);
+      console.log("Weight entry added");
+    } catch (error) {
+      console.error("Error adding weight entry: ", error);
+    }
+  };
+  
+
+  const handleSave = async () => {
+    try {
+      if (user) {
+        const docRef = doc(db, `users/${userCred.uid}`);
+  
+        await updateDoc(docRef, {
+          firstName: newFirstName,
+          lastName: newLastName,
+          age: newAge,
+          currentWeight: newCurrentWeight,
+          goalWeight: newGoalWeight,
+          calorieLimit: newCalorieLimit,
+        });
+  
+        // Add a new weight entry if the current weight has changed
+        if (newCurrentWeight !== user.currentWeight) {
+          await addWeightEntry();
+        }
+          navigation.goBack();
+      }
+    } catch (error) {
+      console.error("Error updating workout: ", error);
+    }
+  };  
+  
+  return (
+    &lt;SafeAreaView style={styles.container}>
+      &lt;ScrollView contentContainerStyle={styles.formContainer}>
+        &lt;Text style={styles.formTitle}>Edit User Profile&lt;/Text>
+        &lt;View style={styles.formGroup}>
+          &lt;Text style={styles.label}>First Name&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            value={newFirstName}
+            onChangeText={setNewFirstName}
+          />
+        &lt;/View>
+        &lt;View style={styles.formGroup}>
+          &lt;Text style={styles.label}>Last Name&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            value={newLastName}
+            onChangeText={setNewLastName}
+          />
+        &lt;/View>
+        &lt;View style={styles.formGroup}>
+          &lt;Text style={styles.label}>Age&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            value={newAge}
+            onChangeText={setNewAge}
+          />
+        &lt;/View>
+        &lt;View style={styles.formGroup}>
+          &lt;Text style={styles.label}>Current Weight&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            value={newCurrentWeight}
+            onChangeText={setNewCurrentWeight}
+          />
+        &lt;/View>
+        &lt;View style={styles.formGroup}>
+          &lt;Text style={styles.label}>Goal Weight&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            value={newGoalWeight}
+            onChangeText={setNewGoalWeight}
+          />
+        &lt;/View>
+        &lt;View style={styles.formGroup}>
+          &lt;Text style={styles.label}>Daily Calorie Allowance&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            value={newCalorieLimit}
+            onChangeText={setNewCalorieLimit}
+          />
+        &lt;/View>
+        &lt;View style={styles.buttonGroup}>
+          &lt;TouchableOpacity
+            style={styles.submitButtonContainer}
+            onPress={handleSave}
+          >
+            &lt;Text style={styles.submitButton}>Save Changes&lt;/Text>
+          &lt;/TouchableOpacity>
+          &lt;TouchableOpacity
+            style={styles.cancelButton}
+            onPress={() => navigation.goBack()}
+          >
+            &lt;Text style={styles.cancelButtonText}>Cancel&lt;/Text>
+          &lt;/TouchableOpacity>
+        &lt;/View>
+      &lt;/ScrollView>
+    &lt;/SafeAreaView>
+  );
+};
+
+export default EditUserScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+  },
+  formContainer: {
+    width: "80%",
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  formTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  formGroup: {
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: "#444",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
+    color: "#444",
+  },
+  submitButtonContainer: {
+    marginTop: 20,
+    alignSelf: "center",
+    backgroundColor: "#0792F9",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  submitButton: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  buttonGroup: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  cancelButton: {
+    backgroundColor: '#ff0000',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  cancelButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },  
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddClientsScreen">AddClientsScreen</a></li><li><a href="global.html#AddNutritionScreen">AddNutritionScreen</a></li><li><a href="global.html#AddWorkoutScreen">AddWorkoutScreen</a></li><li><a href="global.html#AllNutritionScreen">AllNutritionScreen</a></li><li><a href="global.html#AllWorkoutScreen">AllWorkoutScreen</a></li><li><a href="global.html#AnalyticsScreen">AnalyticsScreen</a></li><li><a href="global.html#AssignedWorkoutScreen">AssignedWorkoutScreen</a></li><li><a href="global.html#CreatedExerciseScreen">CreatedExerciseScreen</a></li><li><a href="global.html#CreatedNutritionScreen">CreatedNutritionScreen</a></li><li><a href="global.html#CreatedWorkout">CreatedWorkout</a></li><li><a href="global.html#EditNutritionScreen">EditNutritionScreen</a></li><li><a href="global.html#EditUserScreen">EditUserScreen</a></li><li><a href="global.html#ForgotPasswordScreen">ForgotPasswordScreen</a></li><li><a href="global.html#FormOne">FormOne</a></li><li><a href="global.html#HomeExerciseScreen">HomeExerciseScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#HomeWorkoutScreen">HomeWorkoutScreen</a></li><li><a href="global.html#JumpingJacks">JumpingJacks</a></li><li><a href="global.html#LoginScreen">LoginScreen</a></li><li><a href="global.html#ManageClientsScreen">ManageClientsScreen</a></li><li><a href="global.html#NutritionScreen">NutritionScreen</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegisterScreen">RegisterScreen</a></li><li><a href="global.html#TeamScreen">TeamScreen</a></li><li><a href="global.html#WeightHistoryScreen">WeightHistoryScreen</a></li><li><a href="global.html#WorkoutScreen">WorkoutScreen</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 05 2023 15:09:48 GMT+0100 (Irish Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: App.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: App.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * App.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+import { StyleSheet} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useEffect, useState } from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { auth, db, doc, getDoc } from './firebase';
+import { getAuth } from 'firebase/auth';
+import LoginScreen from './screens/LoggedOut/LoginScreen';
+import HomeScreen from './screens/loggedIn/HomeTab/HomeScreen';
+import AnalyticsScreen from './screens/loggedIn/AnalyticsTab/AnalyticsScreen';
+import ProfileScreen from './screens/loggedIn/ProfileTab/ProfileScreen';
+import WorkoutScreen from './screens/loggedIn/WorkoutTab/WorkoutScreen';
+import ForgotPasswordScreen from './screens/LoggedOut/ForgotPasswordScreen';
+import NutritionScreen from './screens/loggedIn/NutritionTab/NutritionScreen';
+import RegisterScreen from './screens/LoggedOut/RegisterScreen';
+import EditUserScreen from './screens/loggedIn/ProfileTab/EditUserScreen';
+import HomeWorkoutScreen from './screens/loggedIn/HomeTab/HomeWorkoutScreen';
+import HomeExerciseScreen from './screens/loggedIn/HomeTab/HomeExerciseScreen';
+import HomeSingleExercise from './screens/loggedIn/HomeTab/HomeSingleExercise';
+import AddWorkoutScreen from './screens/loggedIn/WorkoutTab/AddWorkoutScreen';
+import AllWorkoutScreen from './screens/loggedIn/WorkoutTab/AllWorkoutScreen';
+import CreatedWorkoutScreen from './screens/loggedIn/WorkoutTab/CreatedWorkoutScreen';
+import CreatedExerciseScreen from './screens/loggedIn/WorkoutTab/CreatedExerciseScreen';
+import ManageClientsScreen from './screens/loggedIn/ProfileTab/ManageClientsScreen';
+import AddClientsScreen from './screens/loggedIn/ProfileTab/AddClientsScreen';
+import SingleClientScreen from './screens/loggedIn/ProfileTab/SingleClientScreen';
+import AssignedWorkoutScreen from './screens/loggedIn/WorkoutTab/AssignedWorkoutScreen';
+import AddNutritionScreen from './screens/loggedIn/NutritionTab/AddNutritionScreen';
+import CreatedNutritionScreen from './screens/loggedIn/NutritionTab/CreatedNutritionScreen';
+import AllNutritionScreen from './screens/loggedIn/NutritionTab/AllNutritionScreen';
+import EditWorkoutScreen from './screens/loggedIn/WorkoutTab/EditWorkoutScreen';
+import EditNutritionScreen from './screens/loggedIn/NutritionTab/EditNutritionScreen';
+import AssignedNutritionScreen from './screens/loggedIn/NutritionTab/AssignedNutritionScreen';
+import WeightHistoryScreen from './screens/loggedIn/AnalyticsTab/WeightHistoryScreen';
+import TeamScreen from './screens/loggedIn/ProfileTab/TeamScreen';
+import AssignAllScreen from'./screens/loggedIn/ProfileTab/AssignAllScreen'
+
+export default function App() {
+
+  const Tab = createBottomTabNavigator();
+  const Stack = createNativeStackNavigator();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState("");
+
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const uid = getAuth().currentUser.uid;
+        setIsLoggedIn(true);
+
+        // fetch user profile so we can check if trainer or client
+        const fetchUserProfile = async () => {
+          const userRef = doc(db, 'users',uid); 
+          const userSnapshot = await getDoc(userRef);
+          await setUserData(userSnapshot.data());
+          console.log(userData);
+      }
+      fetchUserProfile();
+      }
+      else {
+        setIsLoggedIn(false);
+      }
+    })
+  }, [])
+
+  /** Function to create the bottom tabs with icons */
+  function HomeTabs () {
+    return (
+    &lt;Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color }) => {
+                let iconName;
+    
+                if (route.name === 'Home') {
+                  iconName = focused? 'home' : 'home-outline';
+                }
+                else if (route.name === 'Nutrition') {
+                  iconName = focused ? 'nutrition-sharp' : 'nutrition-outline';
+                }  
+                else if (route.name === 'Workouts') {
+                  iconName = focused ? 'ios-list' : 'ios-list-outline';
+                }
+                else if (route.name === 'Analytics') {
+                  iconName = focused ? 'analytics' : 'analytics-outline';
+                }
+                else if (route.name === 'Profile') {
+                  iconName =focused ? 'ios-person' : 'ios-person-outline';
+                }
+                return &lt;Ionicons name={iconName} size={30} color={color} />;
+              },
+              tabBarActiveTintColor: '#0792F9',
+              tabBarInactiveTintColor: 'black',
+            })}
+          
+          >
+            {/* Home Screen */}
+            &lt;Tab.Screen name="Home"
+             component={HomeScreen}
+             options={{headerShown:false}}
+             />
+             {/* Nutrition Screen  */}
+            &lt;Tab.Screen name="Nutrition"
+            component={NutritionScreen}
+            options={{headerShown:false}}
+            />
+            {/* Workout Screen  */}
+            &lt;Tab.Screen name="Workouts"
+            component={WorkoutScreen}
+            options={{headerShown:false}} />
+            {/* Analytics Screen  */}
+            &lt;Tab.Screen name="Analytics" 
+            component={AnalyticsScreen}
+            options={{headerShown:false}}
+            />
+            {/* Profile Screen  */}
+            &lt;Tab.Screen name="Profile" 
+            component={ProfileScreen} 
+            options={{headerShown:false}}
+            />
+          &lt;/Tab.Navigator>
+  )}
+  
+    /** Screens for account type trainer*/
+    if(isLoggedIn==true) {
+      if(userData.role == "trainer")
+      {
+        return (
+          &lt;NavigationContainer>
+          &lt;Stack.Navigator>
+            &lt;Stack.Screen name="HomeTabs"
+              component={HomeTabs}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="WeightHistory"
+              component={WeightHistoryScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="TeamScreen"
+              component={TeamScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="AssignAll"
+              component={AssignAllScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="Edit Workout" 
+            component={EditWorkoutScreen}
+            options={{headerShown:false}} 
+            />
+            &lt;Stack.Screen name="EditNutrition" 
+            component={EditNutritionScreen}
+            options={{headerShown:false}} 
+            />
+            &lt;Stack.Screen name="AllNutrition"
+              component={AllNutritionScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="AddNutrition"
+              component={AddNutritionScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="CreatedNutrition"
+              component={CreatedNutritionScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="EditUser"
+            component={EditUserScreen}
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="SingleClient"
+            component={SingleClientScreen}
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="ManageClients"
+            component={ManageClientsScreen}
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="AddClients"
+            component={AddClientsScreen}
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="Recommended Workout"
+            component={HomeWorkoutScreen}
+            options={{headerShown:true}}
+            />
+            &lt;Stack.Screen name="ExerciseScreen"
+            component={HomeExerciseScreen}
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="HomeExercise"
+            component={HomeSingleExercise}
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="AddWorkout"
+            component={AddWorkoutScreen}
+            options={{headerShown: false}}
+            />
+            &lt;Stack.Screen name="AllWorkout"
+            component={AllWorkoutScreen}
+            options={{headerShown: false}}
+            />
+            &lt;Stack.Screen name="CreatedWorkout"
+            component={CreatedWorkoutScreen}
+            options={{headerShown: false}}
+            />
+            &lt;Stack.Screen name="CreatedExerciseScreen"
+            component={CreatedExerciseScreen}
+            options={{headerShown: false}}
+            />
+          &lt;/Stack.Navigator>
+        &lt;/NavigationContainer>
+      )
+      }
+      /** Screens for account type General User */
+      else {
+        return (
+          &lt;NavigationContainer>
+          &lt;Stack.Navigator>
+            &lt;Stack.Screen name="HomeTabs"
+              component={HomeTabs}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="WeightHistory"
+              component={WeightHistoryScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="TeamScreen"
+              component={TeamScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="AssignAll"
+              component={AssignAllScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="AssignedNutrition"
+              component={AssignedNutritionScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="Edit Workout" 
+            component={EditWorkoutScreen} 
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="EditNutrition" 
+            component={EditNutritionScreen}
+            options={{headerShown:false}} 
+            />
+            &lt;Stack.Screen name="AllNutrition"
+              component={AllNutritionScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="AddNutrition"
+              component={AddNutritionScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="CreatedNutrition"
+              component={CreatedNutritionScreen}
+              options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="AssignedWorkouts"
+            component={AssignedWorkoutScreen}
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="EditUser"
+            component={EditUserScreen}
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="Recommended Workout"
+            component={HomeWorkoutScreen}
+            options={{headerShown:true}}
+            />
+            &lt;Stack.Screen name="ExerciseScreen"
+            component={HomeExerciseScreen}
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="HomeExercise"
+            component={HomeSingleExercise}
+            options={{headerShown:false}}
+            />
+            &lt;Stack.Screen name="AddWorkout"
+            component={AddWorkoutScreen}
+            options={{headerShown: false}}
+            />
+            &lt;Stack.Screen name="AllWorkout"
+            component={AllWorkoutScreen}
+            options={{headerShown: false}}
+            />
+            &lt;Stack.Screen name="CreatedWorkout"
+            component={CreatedWorkoutScreen}
+            options={{headerShown: false}}
+            />
+            &lt;Stack.Screen name="CreatedExerciseScreen"
+            component={CreatedExerciseScreen}
+            options={{headerShown: false}}
+            />
+          &lt;/Stack.Navigator>
+        &lt;/NavigationContainer>
+      )
+
+      }
+      
+    }
+    /** show logged out screens */
+    else {
+      return (
+        &lt;NavigationContainer>
+          &lt;Stack.Navigator>
+            {/* Login Screen  */}
+            &lt;Stack.Screen name="Login" 
+            component={LoginScreen} 
+            options={{headerShown: false}}
+            />
+            &lt;Stack.Screen name="Forgot Password?"
+            component={ForgotPasswordScreen}
+            />
+            &lt;Stack.Screen name="Register"
+            component={RegisterScreen}
+            options={{headerShown: false}}
+            />
+        &lt;/Stack.Navigator>
+      &lt;/NavigationContainer>
+      )
+
+    }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddClientsScreen">AddClientsScreen</a></li><li><a href="global.html#AddNutritionScreen">AddNutritionScreen</a></li><li><a href="global.html#AddWorkoutScreen">AddWorkoutScreen</a></li><li><a href="global.html#AllNutritionScreen">AllNutritionScreen</a></li><li><a href="global.html#AllWorkoutScreen">AllWorkoutScreen</a></li><li><a href="global.html#AnalyticsScreen">AnalyticsScreen</a></li><li><a href="global.html#AssignedWorkoutScreen">AssignedWorkoutScreen</a></li><li><a href="global.html#CreatedExerciseScreen">CreatedExerciseScreen</a></li><li><a href="global.html#CreatedNutritionScreen">CreatedNutritionScreen</a></li><li><a href="global.html#CreatedWorkout">CreatedWorkout</a></li><li><a href="global.html#EditNutritionScreen">EditNutritionScreen</a></li><li><a href="global.html#EditUserScreen">EditUserScreen</a></li><li><a href="global.html#ForgotPasswordScreen">ForgotPasswordScreen</a></li><li><a href="global.html#FormOne">FormOne</a></li><li><a href="global.html#HomeExerciseScreen">HomeExerciseScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#HomeWorkoutScreen">HomeWorkoutScreen</a></li><li><a href="global.html#JumpingJacks">JumpingJacks</a></li><li><a href="global.html#LoginScreen">LoginScreen</a></li><li><a href="global.html#ManageClientsScreen">ManageClientsScreen</a></li><li><a href="global.html#NutritionScreen">NutritionScreen</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegisterScreen">RegisterScreen</a></li><li><a href="global.html#TeamScreen">TeamScreen</a></li><li><a href="global.html#WeightHistoryScreen">WeightHistoryScreen</a></li><li><a href="global.html#WorkoutScreen">WorkoutScreen</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 05 2023 15:09:48 GMT+0100 (Irish Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

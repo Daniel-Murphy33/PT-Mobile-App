@@ -1,3 +1,10 @@
+/**
+ * AddClientsScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -19,6 +26,11 @@ import {
 } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+
+/**
+ * Add Clients and team screen 
+ * @returns {React.Component}
+ */
 
 const AddClientsScreen = () => {
   const [clientName, setClientName] = useState("");

@@ -1,3 +1,10 @@
+/**
+ * firebase.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 // Import the functions you need from the SDKs you need
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -7,8 +14,12 @@ import { getFirestore, collection, addDoc, getDocs, onSnapshot,
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+/**
+ * Firebase configuration object
+ * @type {Object}
+ */
+
+//Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCYo2-B4yQVU3I0YaT9NLsygoUKhg8GuzY",
   authDomain: "backend-fyp.firebaseapp.com",
@@ -19,12 +30,19 @@ const firebaseConfig = {
   measurementId: "G-4T1BF70577"
 };
 
-// Initialize Firebase
+/**
+ * Initialize and get the Firebase app instance
+ * @type {firebase.FirebaseApp}
+ */
 let app;
-//if app not initialised
-if (firebase.apps.length === 0) {
+
+/**
+ * Firestore database instance
+ * @type {firebase.firestore.Firestore}
+ */if (firebase.apps.length === 0) {
     app = firebase.initializeApp(firebaseConfig);    
 }
+
 //app greater then 0 === app initialised 
 else {
     app = firebase.app()
@@ -32,7 +50,11 @@ else {
 
 //init services
 const db = getFirestore(app);
-//get authentication
+
+/**
+ * Firebase authentication instance
+ * @type {firebase.auth.Auth}
+ */
 const auth = firebase.auth()
 
 export { auth, app, db, getFirestore, collection, addDoc, getDocs, getDoc, onSnapshot,

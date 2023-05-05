@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/loggedIn/ProfileTab/AddClientsScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/loggedIn/ProfileTab/AddClientsScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * AddClientsScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
+import { db } from "../../../firebase";
+import { getAuth } from "firebase/auth";
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+  addDoc,
+  collection,
+} from "firebase/firestore";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
+/**
+ * Add Clients and team screen 
+ * @returns {React.Component}
+ */
+
+const AddClientsScreen = () => {
+  const [clientName, setClientName] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [teamName, setTeamName] = useState("");
+  const [members, setMembers] = useState([{ name: "", email: "" }]);
+  const navigation = useNavigation();
+
+  // Create client in Firestore
+  const addClient = async () => {
+    const user = getAuth().currentUser;
+    if (user) {
+      try {
+        const docRef = doc(db, "clients", user.uid);
+        const colRef = collection(docRef, "clients");
+        await addDoc(colRef, {
+          name: clientName,
+          email: clientEmail,
+          createdAt: serverTimestamp(),
+        });
+      } catch (e) {
+        console.log(e);
+      }
+      setClientName("");
+      setClientEmail("");
+    }
+    navigation.goBack();
+  };
+
+  // Create team in Firestore
+  const addTeam = async () => {
+    const user = getAuth().currentUser;
+    if (user) {
+      try {
+        const docRef = doc(db, "teams", user.uid);
+        const colRef = collection(docRef, "teams");
+        await addDoc(colRef, {
+          name: teamName,
+          members: members,
+          createdAt: serverTimestamp(),
+        });
+      } catch (e) {
+        console.log(e);
+      }
+      setTeamName("");
+      setMembers([{ name: "", email: "" }]);
+    }
+    navigation.goBack();
+  };
+
+  // Handle adding or removing a member
+  const handleMemberChange = (index, key, value) => {
+    const newMembers = [...members];
+    newMembers[index][key] = value;
+    setMembers(newMembers);
+  };
+
+  const handleAddMember = () => {
+    setMembers([...members, { name: "", email: "" }]);
+  };
+
+  const handleRemoveMember = (index) => {
+    const newMembers = [...members];
+    newMembers.splice(index, 1);
+    setMembers(newMembers);
+  };
+
+  return (
+    &lt;KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      &lt;View>
+        &lt;TouchableOpacity onPress={() => navigation.goBack()}>
+          &lt;Ionicons name="arrow-back" size={30} color="#0792F9" />
+        &lt;/TouchableOpacity>
+      &lt;/View>
+      &lt;ScrollView contentContainerStyle={styles.container}>
+        &lt;View style={styles.section}>
+          &lt;Text style={styles.sectionHeader}>Add Client&lt;/Text>
+          &lt;Text style={styles.label}>Name:&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            value={clientName}
+            onChangeText={setClientName}
+            placeholder="Enter Client Name..."
+            placeholderTextColor={"grey"}
+          />
+          &lt;Text style={styles.label}>Email:&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            value={clientEmail}
+            onChangeText={setClientEmail}
+            autoCapitalize="none"
+            placeholder="Enter Client Email..."
+            placeholderTextColor={"grey"}
+            keyboardType="email-address"
+          />
+          &lt;TouchableOpacity style={styles.addButton} onPress={addClient}>
+            &lt;Text style={styles.buttonText}>Add Client&lt;/Text>
+          &lt;/TouchableOpacity>
+        &lt;/View>
+
+        &lt;View style={styles.section}>
+          &lt;Text style={styles.sectionHeader}>Add Team&lt;/Text>
+          &lt;Text style={styles.label}>Name:&lt;/Text>
+          &lt;TextInput
+            style={styles.input}
+            value={teamName}
+            onChangeText={setTeamName}
+            placeholder="Enter Team Name..."
+            placeholderTextColor={"grey"}
+          />
+          {members.map((member, index) => (
+            &lt;View key={index} style={styles.member}>
+              &lt;Text style={styles.label}>Member {index + 1}:&lt;/Text>
+              &lt;View style={styles.memberInput}>
+                &lt;TextInput
+                  style={styles.memberName}
+                  value={member.name}
+                  onChangeText={(value) =>
+                    handleMemberChange(index, "name", value)
+                  }
+                  placeholder="Name..."
+                  placeholderTextColor={"grey"}
+                />
+                &lt;TextInput
+                  style={styles.memberEmail}
+                  placeholderTextColor={"grey"}
+                  value={member.email}
+                  onChangeText={(value) =>
+                    handleMemberChange(index, "email", value)
+                  }
+                  autoCapitalize="none"
+                  placeholder="Email..."
+                  keyboardType="email-address"
+                />
+                &lt;TouchableOpacity
+                  style={styles.removeMemberButton}
+                  onPress={() => handleRemoveMember(index)}
+                >
+                  &lt;Text style={styles.removeMemberButtonText}>-&lt;/Text>
+                &lt;/TouchableOpacity>
+              &lt;/View>
+            &lt;/View>
+          ))}
+          &lt;TouchableOpacity
+            style={styles.addMemberButton}
+            onPress={handleAddMember}
+          >
+            &lt;Text style={styles.addMemberButtonText}>Add Member&lt;/Text>
+          &lt;/TouchableOpacity>
+          &lt;TouchableOpacity style={styles.addButton} onPress={addTeam}>
+            &lt;Text style={styles.buttonText}>Add Team&lt;/Text>
+          &lt;/TouchableOpacity>
+        &lt;/View>
+      &lt;/ScrollView>
+    &lt;/KeyboardAvoidingView>
+  );
+};
+
+export default AddClientsScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    padding: 30,
+    backgroundColor: "#fff",
+  },
+  section: {
+    marginBottom: 30,
+  },
+  sectionHeader: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 15,
+    alignSelf: "center",
+    marginTop: 10,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: "bold",
+    alignSelf: "flex-start",
+    marginTop: 15,
+  },
+  input: {
+    width: "100%",
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5,
+  },
+  addButton: {
+    backgroundColor: "#0792F9",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+    width: "100%",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  member: {
+    marginBottom: 20,
+  },
+  memberInput: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  memberName: {
+    flex: 1,
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginRight: 10,
+    padding: 10,
+    borderRadius: 5,
+  },
+  memberEmail: {
+    flex: 1,
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginRight: 10,
+    padding: 10,
+    borderRadius: 5,
+  },
+  addMemberButton: {
+    backgroundColor: "#0792F9",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    alignSelf: "flex-start",
+  },
+  addMemberButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  removeMemberButton: {
+    backgroundColor: "red",
+    padding: 5,
+    borderRadius: 5,
+    marginLeft: 10,
+  },
+  removeMemberButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddClientsScreen">AddClientsScreen</a></li><li><a href="global.html#AddNutritionScreen">AddNutritionScreen</a></li><li><a href="global.html#AddWorkoutScreen">AddWorkoutScreen</a></li><li><a href="global.html#AllNutritionScreen">AllNutritionScreen</a></li><li><a href="global.html#AllWorkoutScreen">AllWorkoutScreen</a></li><li><a href="global.html#AnalyticsScreen">AnalyticsScreen</a></li><li><a href="global.html#AssignedWorkoutScreen">AssignedWorkoutScreen</a></li><li><a href="global.html#CreatedExerciseScreen">CreatedExerciseScreen</a></li><li><a href="global.html#CreatedNutritionScreen">CreatedNutritionScreen</a></li><li><a href="global.html#CreatedWorkout">CreatedWorkout</a></li><li><a href="global.html#EditNutritionScreen">EditNutritionScreen</a></li><li><a href="global.html#EditUserScreen">EditUserScreen</a></li><li><a href="global.html#ForgotPasswordScreen">ForgotPasswordScreen</a></li><li><a href="global.html#FormOne">FormOne</a></li><li><a href="global.html#HomeExerciseScreen">HomeExerciseScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#HomeWorkoutScreen">HomeWorkoutScreen</a></li><li><a href="global.html#JumpingJacks">JumpingJacks</a></li><li><a href="global.html#LoginScreen">LoginScreen</a></li><li><a href="global.html#ManageClientsScreen">ManageClientsScreen</a></li><li><a href="global.html#NutritionScreen">NutritionScreen</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegisterScreen">RegisterScreen</a></li><li><a href="global.html#TeamScreen">TeamScreen</a></li><li><a href="global.html#WeightHistoryScreen">WeightHistoryScreen</a></li><li><a href="global.html#WorkoutScreen">WorkoutScreen</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 05 2023 15:09:48 GMT+0100 (Irish Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

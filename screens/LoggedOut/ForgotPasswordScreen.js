@@ -1,3 +1,10 @@
+/**
+ * ForgotPassword.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import {
@@ -6,12 +13,16 @@ import {
 } from 'react-native'
 import { auth } from '../../firebase';
 
+/**
+ * ForgotPassword screen
+ * @returns {React.Component}
+ */
 const ForgotPasswordScreen = () => {
 
   const [email, setEmail] = useState('');
   const navigation = useNavigation();
 
-  // for resetting password when user forgets
+  /** Function to reset password */
   const ForgotPassword = () => {
 
     console.log("reset email sent to " + email);

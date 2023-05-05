@@ -1,3 +1,10 @@
+/**
+ * TeamScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -15,6 +22,11 @@ import { useNavigation } from "@react-navigation/native";
 import { updateDoc, arrayUnion, doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "../../../firebase";
+
+/**
+ * Team Screen
+ * @returns {React.Component}
+ */
 
 const TeamScreen = ({ route }) => {
   const { id, name, members } = route.params;

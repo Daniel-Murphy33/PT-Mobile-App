@@ -1,3 +1,10 @@
+/**
+ * AllNutritionScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import { Pressable, Text, View, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { Entypo } from "@expo/vector-icons";
@@ -6,6 +13,10 @@ import { useNavigation } from "@react-navigation/native";
 import NutritionCards from "../../../components/NutritionCards";
 import { Ionicons } from "@expo/vector-icons";
 
+/**
+ * All Nutrition screen 
+ * @returns {React.Component}
+ */ 
 
 const AllNutritionScreen = () => {
   //getting the user data

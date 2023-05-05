@@ -1,3 +1,15 @@
+/**
+ * EditWorkoutScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+/**
+ * Edit Workout Screen
+ * @returns {React.Component}
+ */
+
 import React, { useState } from "react";
 import {
   View,
@@ -13,6 +25,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "firebase/auth";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
+
 
 const EditWorkoutScreen = ({ route, navigation }) => {
   const { day, exercises, name, trainingType, notes, id } = route.params;

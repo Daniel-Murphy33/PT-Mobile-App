@@ -1,3 +1,10 @@
+/**
+ * ProfileScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import {
@@ -14,6 +21,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useFocusEffect } from "@react-navigation/native";
+
+/**
+ * Profile Tab Screen
+ * @returns {React.Component}
+ */
 
 const ProfileScreen = () => {
   const auth = getAuth();

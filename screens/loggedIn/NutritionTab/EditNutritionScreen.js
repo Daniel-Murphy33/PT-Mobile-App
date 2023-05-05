@@ -1,3 +1,10 @@
+/**
+ * EditNutritionScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import React, { useState } from "react";
 import {
   View,
@@ -13,6 +20,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { getAuth } from "firebase/auth";
 import { serverTimestamp, doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
+
+/**
+ * Edit Nutrition screen 
+ * @returns {React.Component}
+ */ 
 
 const EditNutritionScreen = ({ route, navigation }) => {
   const { date, meals, name, notes, id } = route.params;

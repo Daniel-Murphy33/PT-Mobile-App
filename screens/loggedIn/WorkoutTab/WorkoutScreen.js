@@ -6,6 +6,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import RecentWorkoutCard from "../../../components/RecentWorkoutCard";
+/**
+ * WorkoutScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
@@ -20,6 +27,10 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
+/**
+ * Workout Tab Screen
+ * @returns {React.Component}
+ */
 
 const WorkoutScreen = () => {
   const navigation = useNavigation();

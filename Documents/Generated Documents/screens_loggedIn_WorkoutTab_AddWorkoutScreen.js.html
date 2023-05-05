@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/loggedIn/WorkoutTab/AddWorkoutScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/loggedIn/WorkoutTab/AddWorkoutScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * AddWorkoutScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  View,
+  ScrollView,
+  SafeAreaView,
+  KeyboardAvoidingView,
+} from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
+import { getAuth } from "firebase/auth";
+import { doc, addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { useNavigation } from "@react-navigation/native";
+
+/**
+ * Add Workout Screen
+ * @returns {React.Component}
+ */
+
+const AddWorkoutScreen = () => {
+  //navigation through screens
+  const navigation = useNavigation();
+
+  const [exerciseTypeOpen, setExerciseTypeOpen] = useState(false);
+  const [exerciseTypeValue, setExerciseTypeValue] = useState(null);
+  const [exerciseTypeItems, setExerciseTypeItems] = useState([
+    { label: "Strength", value: "Strength" },
+    { label: "Cardio", value: "Cardio" },
+  ]);
+
+  // for dropdown
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: "Strength", value: "Strength" },
+    { label: "Cardio", value: "Cardio" },
+    { label: "Hybrid", value: "Hybrid" },
+  ]);
+
+  const [day, setDay] = useState("");
+  const [name, setName] = useState("");
+  const [exercises, setExercises] = useState([
+    { name: "", sets: "", reps: "", weight: "", videoLink: "", rounds: "",
+    time: "", },
+  ]);
+  const [notes, setNotes] = useState("");
+
+  const handleAddExercise = () => {
+    setExercises([
+      ...exercises,
+      {
+        name: "",
+        sets: "",
+        reps: "",
+        weight: "",
+        videoLink: "",
+        rounds: "",
+        time: "",
+        exerciseType: exerciseTypeValue,
+      },
+    ]);
+  };
+
+  const handleRemoveExercise = (index) => {
+    const newExercises = [...exercises];
+    newExercises.splice(index, 1);
+    setExercises(newExercises);
+  };
+
+  const handleExerciseChange = (index, field, value) => {
+    const newExercises = [...exercises];
+    newExercises[index][field] = value;
+    setExercises(newExercises);
+  };
+
+  //Create in Firesotre
+  const AddWorkout = async () => {
+    const user = getAuth().currentUser;
+    if (user) {
+      try {
+        const docRef = doc(db, "users", user.uid);
+        const colRef = collection(docRef, "workouts");
+        await addDoc(colRef, {
+          day: day,
+          name: name,
+          trainingType: value,
+          exercises: exercises,
+          notes: notes,
+          createdAt: serverTimestamp(),
+        });
+        setDay("");
+        setName("");
+        setExercises([{ name: "" }]);
+        setNotes("");
+        console.log(exercises);
+      } catch (e) {
+        console.log(e);
+      }
+      navigation.goBack();
+    }
+  };
+
+  return (
+    &lt;SafeAreaView style={styles.container}>
+      &lt;KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        &lt;Text style={styles.title}>Create Workout&lt;/Text>
+        &lt;ScrollView
+          contentContainerStyle={styles.scrollViewContent}
+          nestedScrollEnabled={true}
+        >
+          &lt;View style={styles.formWrapper}>
+            &lt;View style={styles.formBox}>
+              &lt;Text style={styles.label}>Day :&lt;/Text>
+              &lt;TextInput
+                style={styles.input}
+                placeholder="Enter day..."
+                placeholderTextColor={"grey"}
+                value={day}
+                onChangeText={setDay}
+              />
+            &lt;/View>
+
+            &lt;View style={styles.formBox}>
+              &lt;Text style={styles.label}>Workout Name :&lt;/Text>
+              &lt;TextInput
+                style={styles.input}
+                placeholder={"Enter workout name..."}
+                placeholderTextColor={"grey"}
+                value={name}
+                onChangeText={setName}
+              />
+            &lt;/View>
+
+            &lt;View style={[styles.formBox, { zIndex: 1 }]}>
+              &lt;Text style={styles.label}>Select Training Type :&lt;/Text>
+              &lt;DropDownPicker
+                style={styles.input}
+                overlayStyle={styles.overlay}
+                placeholder={"Select Training Type"}
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+                required={true}
+                listMode="SCROLLVIEW"
+                modal
+              />
+            &lt;/View>
+
+            {exercises.map((exercise, index) => (
+              &lt;View key={index} style={styles.formBox}>
+                &lt;Text style={styles.label}>Exercise Type :&lt;/Text>
+                &lt;DropDownPicker
+                  style={styles.input}
+                  overlayStyle={styles.overlay}
+                  placeholder={"Select Exercise Type"}
+                  open={exerciseTypeOpen}
+                  value={exerciseTypeValue}
+                  items={exerciseTypeItems}
+                  setOpen={setExerciseTypeOpen}
+                  setValue={setExerciseTypeValue}
+                  setItems={setExerciseTypeItems}
+                  listMode="SCROLLVIEW"
+                  modal
+                />
+                &lt;Text style={styles.label}>Exercise {index + 1} :&lt;/Text>
+                &lt;TextInput
+                  style={styles.input}
+                  placeholder="Enter exercise name..."
+                  placeholderTextColor={"grey"}
+                  value={exercise.name}
+                  onChangeText={(text) =>
+                    handleExerciseChange(index, "name", text)
+                  }
+                />
+
+                {exerciseTypeValue === "Strength" &amp;&amp; (
+                  &lt;>
+                    &lt;TextInput
+                      style={styles.input}
+                      placeholder="Enter sets..."
+                      placeholderTextColor={"grey"}
+                      keyboardType="numeric"
+                      value={exercise.sets}
+                      onChangeText={(text) =>
+                        handleExerciseChange(index, "sets", text)
+                      }
+                    />
+
+                    &lt;TextInput
+                      style={styles.input}
+                      placeholder="Enter reps..."
+                      placeholderTextColor={"grey"}
+                      keyboardType="numeric"
+                      value={exercise.reps}
+                      onChangeText={(text) =>
+                        handleExerciseChange(index, "reps", text)
+                      }
+                    />
+
+                    &lt;TextInput
+                      style={styles.input}
+                      placeholder="Enter weight..."
+                      placeholderTextColor={"grey"}
+                      value={exercise.weight}
+                      onChangeText={(text) =>
+                        handleExerciseChange(index, "weight", text)
+                      }
+                    />
+                  &lt;/>
+                )}
+
+                {exerciseTypeValue === "Cardio" &amp;&amp; (
+                  &lt;>
+                    &lt;TextInput
+                      style={styles.input}
+                      placeholder="Enter rounds..."
+                      placeholderTextColor={"grey"}
+                      keyboardType="numeric"
+                      value={exercise.rounds}
+                      onChangeText={(text) =>
+                        handleExerciseChange(index, "rounds", text)
+                      }
+                    />
+
+                    &lt;TextInput
+                      style={styles.input}
+                      placeholder="Enter time..."
+                      placeholderTextColor={"grey"}
+                      keyboardType="numeric"
+                      value={exercise.time}
+                      onChangeText={(text) =>
+                        handleExerciseChange(index, "time", text)
+                      }
+                    />
+                  &lt;/>
+                )}
+                &lt;TextInput
+                  style={styles.input}
+                  placeholder="Enter video link..."
+                  placeholderTextColor={"grey"}
+                  value={exercise.videoLink}
+                  onChangeText={(text) =>
+                    handleExerciseChange(index, "videoLink", text)
+                  }
+                />
+
+                &lt;TouchableOpacity
+                  style={styles.addButton}
+                  onPress={handleAddExercise}
+                >
+                  &lt;Text style={styles.addButtonText}>Add Exercise&lt;/Text>
+                &lt;/TouchableOpacity>
+
+                {index > 0 &amp;&amp; (
+                  &lt;TouchableOpacity
+                    style={styles.removeButton}
+                    onPress={() => handleRemoveExercise(index)}
+                  >
+                    &lt;Text style={styles.removeButtonText}>Remove Exercise&lt;/Text>
+                  &lt;/TouchableOpacity>
+                )}
+              &lt;/View>
+            ))}
+
+            &lt;View style={styles.formBox}>
+              &lt;Text style={styles.label}>Notes:&lt;/Text>
+              &lt;TextInput
+                style={styles.input}
+                placeholder="Enter notes..."
+                placeholderTextColor={"grey"}
+                multiline={true}
+                value={notes}
+                onChangeText={setNotes}
+              />
+            &lt;/View>
+
+            &lt;TouchableOpacity style={styles.addButton} onPress={AddWorkout}>
+              &lt;Text style={styles.addButtonText}>Submit&lt;/Text>
+            &lt;/TouchableOpacity>
+            &lt;TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
+              &lt;Text style={styles.addButtonText}>Cancel&lt;/Text>
+            &lt;/TouchableOpacity>
+          &lt;/View>
+        &lt;/ScrollView>
+      &lt;/KeyboardAvoidingView>
+    &lt;/SafeAreaView>
+  );
+};
+
+export default AddWorkoutScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    margin: 20,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+  },
+  formWrapper: {
+    flex: 1,
+    marginHorizontal: 20,
+    justifyContent: "center",
+  },
+  formBox: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
+    marginBottom: 20,
+  },
+  overlay: {
+    zIndex: 9999,
+  },
+  title: {
+    alignSelf: "center",
+    fontSize: 23,
+    fontWeight: "bold",
+    padding: 15,
+    marginBottom: 10,
+  },
+  dropdown: {
+    marginTop: 8,
+    marginBottom: 16,
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 4,
+    padding: 10,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginVertical: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  addButton: {
+    backgroundColor: "#0792F9",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  cancelButton: {
+    backgroundColor: "#FF5722",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  addButtonText: {
+    color: "#FFF",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  removeButton: {
+    backgroundColor: "#FF5722",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  removeButtonText: {
+    color: "#FFF",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  exerciseBox: {
+    marginBottom: 10,
+  },
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddClientsScreen">AddClientsScreen</a></li><li><a href="global.html#AddNutritionScreen">AddNutritionScreen</a></li><li><a href="global.html#AddWorkoutScreen">AddWorkoutScreen</a></li><li><a href="global.html#AllNutritionScreen">AllNutritionScreen</a></li><li><a href="global.html#AllWorkoutScreen">AllWorkoutScreen</a></li><li><a href="global.html#AnalyticsScreen">AnalyticsScreen</a></li><li><a href="global.html#AssignedWorkoutScreen">AssignedWorkoutScreen</a></li><li><a href="global.html#CreatedExerciseScreen">CreatedExerciseScreen</a></li><li><a href="global.html#CreatedNutritionScreen">CreatedNutritionScreen</a></li><li><a href="global.html#CreatedWorkout">CreatedWorkout</a></li><li><a href="global.html#EditNutritionScreen">EditNutritionScreen</a></li><li><a href="global.html#EditUserScreen">EditUserScreen</a></li><li><a href="global.html#ForgotPasswordScreen">ForgotPasswordScreen</a></li><li><a href="global.html#FormOne">FormOne</a></li><li><a href="global.html#HomeExerciseScreen">HomeExerciseScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#HomeWorkoutScreen">HomeWorkoutScreen</a></li><li><a href="global.html#JumpingJacks">JumpingJacks</a></li><li><a href="global.html#LoginScreen">LoginScreen</a></li><li><a href="global.html#ManageClientsScreen">ManageClientsScreen</a></li><li><a href="global.html#NutritionScreen">NutritionScreen</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegisterScreen">RegisterScreen</a></li><li><a href="global.html#TeamScreen">TeamScreen</a></li><li><a href="global.html#WeightHistoryScreen">WeightHistoryScreen</a></li><li><a href="global.html#WorkoutScreen">WorkoutScreen</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 05 2023 15:09:48 GMT+0100 (Irish Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

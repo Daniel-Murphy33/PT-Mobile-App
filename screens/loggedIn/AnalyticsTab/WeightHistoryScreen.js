@@ -1,3 +1,10 @@
+/**
+ * LoginScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
@@ -6,6 +13,10 @@ import { getAuth } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
+/**
+ * Weight History screen 
+ * @returns {React.Component}
+ */ 
 
 const WeightHistoryScreen = () => {
   const userCred = getAuth().currentUser;

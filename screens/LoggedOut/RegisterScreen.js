@@ -1,3 +1,10 @@
+/**
+ * RegisterScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import {
   StyleSheet,
   Text,
@@ -15,6 +22,11 @@ import { auth, setDoc, doc, db } from "../../firebase";
 import { useNavigation } from "@react-navigation/core";
 import DropDownPicker from "react-native-dropdown-picker";
 import { updateProfile } from "firebase/auth";
+
+/**
+ * Register screen
+ * @returns {React.Component}
+ */
 
 const RegisterScreen = () => {
   // for dropdown
@@ -46,7 +58,7 @@ const RegisterScreen = () => {
     navigation.navigate("Forgot Password?");
   };
 
-  //function for signing up
+  /**Function for handling the sign up process */
 const handleSignUp = async () => {
 
   if (!email || !password || !firstName || !lastName || !age || !currentWeight || !goalWeight || !value || !calorieLimit) {

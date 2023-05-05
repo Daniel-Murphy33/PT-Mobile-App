@@ -1,3 +1,10 @@
+/**
+ * ManageClientsScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
 import {
@@ -19,6 +26,11 @@ import {
 } from "react-native";
 import { db } from "../../../firebase";
 import { Ionicons } from "@expo/vector-icons";
+
+/**
+ * Manage Clients and team screen 
+ * @returns {React.Component}
+ */
 
 const ManageClientsScreen = () => {
   const navigation = useNavigation();

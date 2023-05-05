@@ -1,3 +1,10 @@
+/**
+ * CreatedWorkoutScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import React from "react";
 import {
   View,
@@ -12,6 +19,13 @@ import { useState } from "react";
 import { getAuth } from "firebase/auth";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
+
+/**
+ * CreatedWorkoutScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
 
 const CreatedWorkout = ({ route, navigation }) => {
   const { day, exercises, name, trainingType, notes, id, isCompleted, isAssigned } = route.params;

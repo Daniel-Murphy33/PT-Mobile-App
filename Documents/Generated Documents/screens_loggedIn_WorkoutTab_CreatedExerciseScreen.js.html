@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/loggedIn/WorkoutTab/CreatedExerciseScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/loggedIn/WorkoutTab/CreatedExerciseScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * CreatedExerciseScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Button,
+  TextInput,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import YoutubePlayer from "react-native-youtube-iframe";
+import { useEffect } from "react";
+
+/**
+ * Created Exercise Screen
+ * @returns {React.Component}
+ */
+
+const CreatedExerciseScreen = ({ route }) => {
+  //gets params from last page
+  const { exercise, exercises, currentIndex } = route.params;
+  const navigation = useNavigation();
+  const [videoId, setVideoId] = useState("");
+
+  const extractId = () => {
+    if (exercise.videoLink) {
+      const extractedId = exercise.videoLink.slice(-11);
+      setVideoId(extractedId);
+    }
+  };
+
+  useEffect(() => {
+    extractId();
+  }, []);
+
+  return (
+    &lt;SafeAreaView style={styles.container}>
+      {videoId ? (
+        &lt;YoutubePlayer height={300} play={false} videoId={videoId} />
+      ) : (
+        &lt;Text style={styles.title}>&lt;/Text>
+      )}
+
+      &lt;Text style={styles.title}>{exercise.name}&lt;/Text>
+      &lt;Text style={styles.sets}>x{exercise.sets} Sets&lt;/Text>
+      &lt;Text style={styles.sets}>x{exercise.reps} Reps&lt;/Text>
+      &lt;View style={styles.buttonContainer}>
+        &lt;TouchableOpacity
+          style={styles.exitBtn}
+          onPress={() => navigation.goBack()}
+        >
+          &lt;Text
+            style={styles.btnText}>BACK&lt;/Text>
+        &lt;/TouchableOpacity>
+      &lt;/View>
+    &lt;/SafeAreaView>
+  );
+};
+
+export default CreatedExerciseScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F2F2F2",
+  },
+  image: {
+    width: "100%",
+    height: 300,
+    backgroundColor: "black",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  sets: {
+    fontSize: 24,
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  video: {
+    top: 20,
+  },
+  doneBtn: {
+    backgroundColor: "#0792F9",
+    marginTop: 20,
+    borderRadius: 18,
+    padding: 10,
+    width: 140,
+    alignSelf: "center",
+  },
+  buttonContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  prevBtn: {
+    backgroundColor: "#4682B4",
+    borderRadius: 18,
+    padding: 10,
+    width: 140,
+    marginBottom: 20,
+  },
+  nextBtn: {
+    backgroundColor: "#4682B4",
+    borderRadius: 18,
+    padding: 10,
+    width: 140,
+    marginTop: 20,
+  },
+  exitBtn: {
+    backgroundColor: "#FF0000",
+    borderRadius: 18,
+    padding: 10,
+    width: 140,
+    marginTop: 20,
+  },
+  btnText: {
+    textAlign: "center",
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  input: {
+    bottom: 70,
+    backgroundColor: "lightgrey",
+  },
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddClientsScreen">AddClientsScreen</a></li><li><a href="global.html#AddNutritionScreen">AddNutritionScreen</a></li><li><a href="global.html#AddWorkoutScreen">AddWorkoutScreen</a></li><li><a href="global.html#AllNutritionScreen">AllNutritionScreen</a></li><li><a href="global.html#AllWorkoutScreen">AllWorkoutScreen</a></li><li><a href="global.html#AnalyticsScreen">AnalyticsScreen</a></li><li><a href="global.html#AssignedWorkoutScreen">AssignedWorkoutScreen</a></li><li><a href="global.html#CreatedExerciseScreen">CreatedExerciseScreen</a></li><li><a href="global.html#CreatedNutritionScreen">CreatedNutritionScreen</a></li><li><a href="global.html#CreatedWorkout">CreatedWorkout</a></li><li><a href="global.html#EditNutritionScreen">EditNutritionScreen</a></li><li><a href="global.html#EditUserScreen">EditUserScreen</a></li><li><a href="global.html#ForgotPasswordScreen">ForgotPasswordScreen</a></li><li><a href="global.html#FormOne">FormOne</a></li><li><a href="global.html#HomeExerciseScreen">HomeExerciseScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#HomeWorkoutScreen">HomeWorkoutScreen</a></li><li><a href="global.html#JumpingJacks">JumpingJacks</a></li><li><a href="global.html#LoginScreen">LoginScreen</a></li><li><a href="global.html#ManageClientsScreen">ManageClientsScreen</a></li><li><a href="global.html#NutritionScreen">NutritionScreen</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegisterScreen">RegisterScreen</a></li><li><a href="global.html#TeamScreen">TeamScreen</a></li><li><a href="global.html#WeightHistoryScreen">WeightHistoryScreen</a></li><li><a href="global.html#WorkoutScreen">WorkoutScreen</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 05 2023 15:09:48 GMT+0100 (Irish Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

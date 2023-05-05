@@ -1,3 +1,10 @@
+/**
+ * HomeScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import { getAuth } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
@@ -5,6 +12,11 @@ import { View, Text, Image, StyleSheet, ScrollView } from 'react-native'
 import FitnessCards from '../../../components/FitnessCards';
 import { db } from '../../../firebase';
 import ProfileScreen from '../ProfileTab/ProfileScreen';
+
+/**
+ * Home Tab screen
+ * @returns {React.Component}
+ */
 
 const HomeScreen = () => {
 

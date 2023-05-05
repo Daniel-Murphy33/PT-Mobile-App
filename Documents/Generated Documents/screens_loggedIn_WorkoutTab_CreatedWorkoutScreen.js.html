@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/loggedIn/WorkoutTab/CreatedWorkoutScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/loggedIn/WorkoutTab/CreatedWorkoutScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * CreatedWorkoutScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { getAuth } from "firebase/auth";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
+
+/**
+ * CreatedWorkoutScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+const CreatedWorkout = ({ route, navigation }) => {
+  const { day, exercises, name, trainingType, notes, id, isCompleted, isAssigned } = route.params;
+  const [completed, setCompleted] = useState(isCompleted);
+  const user = getAuth().currentUser;
+  
+
+  const handleCompleteWorkout = async () => {
+    try {
+      if (user) {
+        let workoutDocRef;
+        
+        // Check if the workout is assigned or user-created
+        if (isAssigned) {
+          workoutDocRef = doc(db, `workouts/${id}`);
+        } else {
+          workoutDocRef = doc(db, `users/${user.uid}/workouts/${id}`);
+        }
+  
+        const newCompletionStatus = !completed;
+        await updateDoc(workoutDocRef, {
+          isCompleted: newCompletionStatus,
+          completedAt: serverTimestamp(),
+        });
+      }
+    } catch (error) {
+      console.error("Error marking workout as complete: ", error);
+    }
+    setCompleted(!completed);
+  };  
+  
+  const handleExercisePress = (exercise) => {
+    const currentIndex = exercises.findIndex((item) => item.id === exercise.id);
+    navigation.navigate("CreatedExerciseScreen", {
+      exercise,
+      exercises,
+      currentIndex,
+    });
+  };
+  return (
+    &lt;ScrollView contentContainerStyle={styles.container}>
+      &lt;View style={styles.headerContainer}>
+        &lt;TouchableOpacity onPress={() => navigation.goBack()}>
+          &lt;Ionicons name="arrow-back" size={30} color="#0792F9" />
+        &lt;/TouchableOpacity>
+        &lt;Text style={styles.header}>{day}&lt;/Text>
+        &lt;View style={{ width: 24 }}>&lt;/View>
+      &lt;/View>
+      &lt;View style={styles.buttonsContainer}>
+        &lt;TouchableOpacity
+          style={styles.editButton}
+          onPress={() =>
+            navigation.navigate("Edit Workout", {
+              day,
+              id,
+              exercises,
+              name,
+              trainingType,
+              notes,
+            })
+          }
+        >
+          &lt;Text style={styles.editButtonText}>Edit Workout&lt;/Text>
+        &lt;/TouchableOpacity>
+        &lt;TouchableOpacity onPress={handleCompleteWorkout}>
+          &lt;View style={styles.completedContainer}>
+            &lt;Ionicons
+              name={completed ? "checkmark-circle" : "checkmark-circle-outline"}
+              size={30}
+              color={completed ? "green" : "gray"}
+            />
+            &lt;Text style={styles.checkTxt}>Completed&lt;/Text>
+          &lt;/View>
+        &lt;/TouchableOpacity>
+      &lt;/View>
+      &lt;View style={styles.workoutContainer}>
+        &lt;Text style={styles.workoutTitle}>
+          {name} - {trainingType}
+        &lt;/Text>
+      &lt;/View>
+      &lt;View style={styles.exercisesContainer}>
+        {exercises.map((exercise, index) => (
+          &lt;TouchableOpacity
+            key={index}
+            style={styles.exerciseContainer}
+            onPress={() => handleExercisePress(exercise)}
+          >
+            &lt;Text style={styles.exerciseTitle}>
+              Exercise {index + 1} - {exercise.name}
+            &lt;/Text>
+            &lt;Text style={styles.exerciseInfo}>
+              Sets x{exercise.sets} | Reps x{exercise.reps} | Weight:{" "}
+              {exercise.weight}
+            &lt;/Text>
+          &lt;/TouchableOpacity>
+        ))}
+      &lt;/View>
+      &lt;View style={styles.notesContainer}>
+        &lt;Text style={styles.notesTitle}>Notes:&lt;/Text>
+        &lt;Text style={styles.notesText}>{notes}&lt;/Text>
+      &lt;/View>
+    &lt;/ScrollView>
+  );
+};
+
+export default CreatedWorkout;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 25,
+    backgroundColor: "#F2F2F2",
+    marginTop: 20,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 35,
+  },
+  header: {
+    fontSize: 30,
+    fontWeight: "bold",
+    textAlign: "center",
+    flex: 1,
+    marginLeft: 10,
+  },
+  workoutContainer: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    marginVertical: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  workoutTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  exercisesContainer: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    marginVertical: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  exerciseContainer: {
+    marginVertical: 10,
+  },
+  exerciseTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  exerciseInfo: {
+    fontSize: 16,
+    marginLeft: 20,
+  },
+  editButton: {
+    backgroundColor: "#0792F9",
+    borderRadius: 10,
+    padding: 5,
+    marginTop: 10,
+    alignSelf: "flex-start",
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  editButtonText: {
+    textAlign: "center",
+    color: "white",
+  },
+  notesContainer: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  notesTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  notesText: {
+    fontSize: 16,
+  },
+  checkTxt: {
+    marginLeft: 5,
+  },
+  completedContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+  },
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddClientsScreen">AddClientsScreen</a></li><li><a href="global.html#AddNutritionScreen">AddNutritionScreen</a></li><li><a href="global.html#AddWorkoutScreen">AddWorkoutScreen</a></li><li><a href="global.html#AllNutritionScreen">AllNutritionScreen</a></li><li><a href="global.html#AllWorkoutScreen">AllWorkoutScreen</a></li><li><a href="global.html#AnalyticsScreen">AnalyticsScreen</a></li><li><a href="global.html#AssignedWorkoutScreen">AssignedWorkoutScreen</a></li><li><a href="global.html#CreatedExerciseScreen">CreatedExerciseScreen</a></li><li><a href="global.html#CreatedNutritionScreen">CreatedNutritionScreen</a></li><li><a href="global.html#CreatedWorkout">CreatedWorkout</a></li><li><a href="global.html#EditNutritionScreen">EditNutritionScreen</a></li><li><a href="global.html#EditUserScreen">EditUserScreen</a></li><li><a href="global.html#ForgotPasswordScreen">ForgotPasswordScreen</a></li><li><a href="global.html#FormOne">FormOne</a></li><li><a href="global.html#HomeExerciseScreen">HomeExerciseScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#HomeWorkoutScreen">HomeWorkoutScreen</a></li><li><a href="global.html#JumpingJacks">JumpingJacks</a></li><li><a href="global.html#LoginScreen">LoginScreen</a></li><li><a href="global.html#ManageClientsScreen">ManageClientsScreen</a></li><li><a href="global.html#NutritionScreen">NutritionScreen</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegisterScreen">RegisterScreen</a></li><li><a href="global.html#TeamScreen">TeamScreen</a></li><li><a href="global.html#WeightHistoryScreen">WeightHistoryScreen</a></li><li><a href="global.html#WorkoutScreen">WorkoutScreen</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 05 2023 15:09:48 GMT+0100 (Irish Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

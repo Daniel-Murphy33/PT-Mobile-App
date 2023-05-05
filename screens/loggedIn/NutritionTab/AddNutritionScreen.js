@@ -1,3 +1,10 @@
+/**
+ * AddNutrition.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -13,6 +20,11 @@ import { getAuth } from "firebase/auth";
 import { doc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useNavigation } from "@react-navigation/native";
+
+/**
+ * Add Nutrition screen 
+ * @returns {React.Component}
+ */ 
 
 const AddNutritionScreen = () => {
   const navigation = useNavigation();

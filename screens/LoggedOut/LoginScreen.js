@@ -1,3 +1,10 @@
+/**
+ * LoginScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
 import { StyleSheet,
   Text,
   TextInput, 
@@ -10,6 +17,11 @@ import { StyleSheet,
 import React, { useState } from 'react'
 import { auth } from '../../firebase';
 import { useNavigation } from '@react-navigation/core';
+
+/**
+ * Login screen 
+ * @returns {React.Component}
+ */
 
 const LoginScreen = () => {
 
@@ -28,7 +40,7 @@ const LoginScreen = () => {
     navigation.navigate("Forgot Password?")
   }
 
-  //function for signing in 
+  /**Function to sign in */
   const handleSignIn = () => {
     auth. 
     signInWithEmailAndPassword (email, password)

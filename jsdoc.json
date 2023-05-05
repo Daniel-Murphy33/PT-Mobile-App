@@ -1,0 +1,13 @@
+{
+  "source": {
+    "include": ["./"],
+    "exclude": ["./node_modules", "./.git", "./.vscode", "./.expo"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)(_generated_|\\.min\\.js)"
+  },
+  "opts": {
+    "recurse": true,
+    "destination": "out/",
+    "readme": "./README.md"
+  }
+}

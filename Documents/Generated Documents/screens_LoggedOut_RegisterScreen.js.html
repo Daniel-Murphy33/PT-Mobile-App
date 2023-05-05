@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/LoggedOut/RegisterScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/LoggedOut/RegisterScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * RegisterScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Image,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+} from "react-native";
+import React, { useState } from "react";
+import { auth, setDoc, doc, db } from "../../firebase";
+import { useNavigation } from "@react-navigation/core";
+import DropDownPicker from "react-native-dropdown-picker";
+import { updateProfile } from "firebase/auth";
+
+/**
+ * Register screen
+ * @returns {React.Component}
+ */
+
+const RegisterScreen = () => {
+  // for dropdown
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: "Personal Trainer", value: "trainer" },
+    { label: "General User", value: "client" },
+  ]);
+
+  // user info
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [age, setAge] = useState("");
+  const [currentWeight, setCurrentWeight] = useState("");
+  const [goalWeight, setGoalWeight] = useState("");
+  const [calorieLimit, setCalorieLimit] = useState("");
+  const navigation = useNavigation();
+
+  //navigating to screens
+  const LoginScreenPage = () => {
+    navigation.navigate("Login");
+  };
+
+  //navigating through screens
+  const ForgotPasswordScreen = () => {
+    navigation.navigate("Forgot Password?");
+  };
+
+  /**Function for handling the sign up process */
+const handleSignUp = async () => {
+
+  if (!email || !password || !firstName || !lastName || !age || !currentWeight || !goalWeight || !value || !calorieLimit) {
+    alert("Please fill in all fields");
+    return;
+  }
+
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(async (UserCredentials) => {
+      const user = UserCredentials.user;
+      console.log("Registered with: ", user.email);
+      try {
+        const uidRef = doc(db, "users", user.uid);
+        updateProfile(auth.currentUser, {
+          displayName: firstName 
+        }).then(() => {
+          console.log("Display name updated");
+        }).catch((error) => {
+          console.log(error)
+        });
+        await setDoc(uidRef, {
+          role: value,
+          firstName: firstName,
+          lastName: lastName,
+          age: age,
+          currentWeight: currentWeight,
+          goalWeight: goalWeight,
+          calorieLimit: calorieLimit,
+        });
+
+        // Create a new weights collection for the user
+        const initialWeight = {
+          date: new Date(),
+          weight: currentWeight,
+        };
+        await setDoc(doc(db, `users/${user.uid}/weights`, initialWeight.date.toISOString()), initialWeight);
+
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    })
+    .catch((error) => alert(error.message));
+};
+
+  return (
+    //allows for dismissing keyboard
+    &lt;TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      &lt;KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        &lt;ScrollView contentContainerStyle={styles.container} nestedScrollEnabled={true}>
+          &lt;Image
+            source={require("../../assets/logo-no-bg.png")}
+            style={styles.logo}
+          />
+          &lt;View style={styles.inputContainer}>
+            &lt;TextInput
+              placeholder="Email..."
+              autoCapitalize='none'
+              placeholderTextColor="black"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              style={styles.input}
+            />
+            &lt;TextInput
+              placeholder="Password..."
+              placeholderTextColor="black"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              style={styles.input}
+              secureTextEntry
+            />
+            &lt;DropDownPicker
+              style={styles.dropdown}
+              placeholder={"Select an Account Type..."}
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              listMode="SCROLLVIEW"
+            />
+            &lt;TextInput
+              placeholder="First Name..."
+              placeholderTextColor="black"
+              value={firstName}
+              onChangeText={(text) => setFirstName(text)}
+              style={styles.input}
+            />
+            &lt;TextInput
+              placeholder="Last Name..."
+              placeholderTextColor="black"
+              value={lastName}
+              onChangeText={(text) => setLastName(text)}
+              style={styles.input}
+            />
+            &lt;TextInput
+              placeholder="Age..."
+              placeholderTextColor="black"
+              keyboardType="numeric"
+              value={age}
+              onChangeText={(text) => setAge(text)}
+              style={styles.input}
+            />
+            &lt;TextInput
+              placeholder="Current Weight..."
+              placeholderTextColor="black"
+              keyboardType="numeric"
+              value={currentWeight}
+              onChangeText={(text) => setCurrentWeight(text)}
+              style={styles.input}
+            />
+            &lt;TextInput
+              placeholder="Goal Weight..."
+              placeholderTextColor="black"
+              keyboardType="numeric"
+              value={goalWeight}
+              onChangeText={(text) => setGoalWeight(text)}
+              style={styles.input}
+            />
+            &lt;TextInput
+              placeholder="Daily Calorie Allowance..."
+              placeholderTextColor="black"
+              keyboardType="numeric"
+              value={calorieLimit}
+              onChangeText={(text) => setCalorieLimit(text)}
+              style={styles.input}
+            />
+          &lt;/View>
+
+          &lt;View style={styles.buttonContainer}>
+            &lt;TouchableOpacity onPress={handleSignUp} style={styles.button}>
+              &lt;Text style={styles.buttonText}>Register&lt;/Text>
+            &lt;/TouchableOpacity>
+            &lt;TouchableOpacity
+              onPress={LoginScreenPage}
+              style={[styles.button, styles.buttonOutline]}
+            >
+              &lt;Text style={styles.buttonOutlineText}>Back To Login&lt;/Text>
+            &lt;/TouchableOpacity>
+            &lt;TouchableOpacity
+              onPress={ForgotPasswordScreen}
+              style={[styles.button, styles.buttonOutline]}
+            >
+              &lt;Text style={styles.buttonOutlineText}>Forgot Password ?&lt;/Text>
+            &lt;/TouchableOpacity>
+          &lt;/View>
+        &lt;/ScrollView>
+      &lt;/KeyboardAvoidingView>
+    &lt;/TouchableWithoutFeedback>
+  );
+};
+
+export default RegisterScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%"
+  },
+
+  inputContainer: {
+    width: "80%",
+  },
+  input: {
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 12,
+  },
+  dropdown: {
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 12,
+    borderColor: "white",
+  },
+
+  buttonContainer: {
+    width: "60%",
+    // justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  button: {
+    backgroundColor: "#0792F9",
+    width: "100%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    // fontSize: 16,
+  },
+
+  buttonOutlineText: {
+    color: "#0792F9",
+    fontWeight: "bold",
+    // fontSize: 16,
+  },
+
+  buttonOutline: {
+    backgroundColor: "white",
+    marginTop: 5,
+    borderColor: "#0792F9",
+    borderWidth: 2,
+  },
+
+  heading: {
+    fontWeight: "500",
+    fontStyle: "bold",
+    fontSize: 23,
+    textAlign: "center",
+  },
+
+  logo: {
+    resizeMode: "contain",
+    height: 160,
+    marginTop: 60,
+  },
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddClientsScreen">AddClientsScreen</a></li><li><a href="global.html#AddNutritionScreen">AddNutritionScreen</a></li><li><a href="global.html#AddWorkoutScreen">AddWorkoutScreen</a></li><li><a href="global.html#AllNutritionScreen">AllNutritionScreen</a></li><li><a href="global.html#AllWorkoutScreen">AllWorkoutScreen</a></li><li><a href="global.html#AnalyticsScreen">AnalyticsScreen</a></li><li><a href="global.html#AssignedWorkoutScreen">AssignedWorkoutScreen</a></li><li><a href="global.html#CreatedExerciseScreen">CreatedExerciseScreen</a></li><li><a href="global.html#CreatedNutritionScreen">CreatedNutritionScreen</a></li><li><a href="global.html#CreatedWorkout">CreatedWorkout</a></li><li><a href="global.html#EditNutritionScreen">EditNutritionScreen</a></li><li><a href="global.html#EditUserScreen">EditUserScreen</a></li><li><a href="global.html#ForgotPasswordScreen">ForgotPasswordScreen</a></li><li><a href="global.html#FormOne">FormOne</a></li><li><a href="global.html#HomeExerciseScreen">HomeExerciseScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#HomeWorkoutScreen">HomeWorkoutScreen</a></li><li><a href="global.html#JumpingJacks">JumpingJacks</a></li><li><a href="global.html#LoginScreen">LoginScreen</a></li><li><a href="global.html#ManageClientsScreen">ManageClientsScreen</a></li><li><a href="global.html#NutritionScreen">NutritionScreen</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegisterScreen">RegisterScreen</a></li><li><a href="global.html#TeamScreen">TeamScreen</a></li><li><a href="global.html#WeightHistoryScreen">WeightHistoryScreen</a></li><li><a href="global.html#WorkoutScreen">WorkoutScreen</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 05 2023 15:09:48 GMT+0100 (Irish Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/loggedIn/ProfileTab/ProfileScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/loggedIn/ProfileTab/ProfileScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * ProfileScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import {
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Alert,
+  Image,
+} from "react-native";
+import { doc, db, getDoc, updateDoc, setDoc } from "../../../firebase";
+import { deleteUser, getAuth } from "firebase/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Entypo } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import { useFocusEffect } from "@react-navigation/native";
+
+/**
+ * Profile Tab Screen
+ * @returns {React.Component}
+ */
+
+const ProfileScreen = () => {
+  const auth = getAuth();
+  const userCred = auth.currentUser;
+  const [user, setUser] = useState({});
+  const [image, setImage] = useState(null);
+  const navigation = useNavigation();
+
+  const ManageClientsScreen = () => {
+    navigation.navigate("ManageClients");
+  };
+
+  const handleSignOut = async () => {
+    auth.signOut().catch((error) => alert(error.message));
+  };
+
+  const DeleteUser = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete this account? All of your data will be lost.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => {
+            deleteUser(userCred)
+              .then(() => {
+                console.log("Deleted", userCred);
+              })
+              .catch((error) => {
+                console.log("error:", error);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const fetchUserProfile = async () => {
+    const userRef = doc(db, "users", userCred.uid);
+    const userSnapshot = await getDoc(userRef);
+    await setUser(userSnapshot.data());
+
+    if (userSnapshot.data().image) {
+      setImage(userSnapshot.data().image);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUserProfile();
+    }, [])
+  );
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  
+    if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+      updateUserProfile(imageUri);
+    }
+  };
+  
+  const updateUserProfile = async (imageUri) => {
+    const userRef = doc(db, "users", userCred.uid);
+    await setDoc(userRef, {
+      image: imageUri,
+    }, { merge: true }); 
+  
+    setImage(imageUri);
+  };
+
+  return (
+    &lt;SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "#fff",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      &lt;TouchableOpacity style={styles.delete} onPress={DeleteUser}>
+        &lt;Text style={{ marginTop: 50, fontWeight: "bold" }}>
+          Delete Account
+        &lt;/Text>
+        &lt;Entypo
+          name="remove-user"
+          size={40}
+          style={{
+            color: "darkred",
+            marginTop: 20,
+            position: "absolute",
+            right: 10,
+            top: 50,
+          }}
+        />
+      &lt;/TouchableOpacity>
+      &lt;Text style={styles.userName}>Profile&lt;/Text>
+      &lt;TouchableOpacity onPress={pickImage}>
+        &lt;Image
+          style={styles.userImg}
+          source={image ? { uri: image } : require("../../../assets/blank-user.jpg")}
+        />
+        &lt;View style={styles.editBtn}>
+          &lt;Entypo name="plus" size={24} color="white" />
+        &lt;/View>
+      &lt;/TouchableOpacity>
+      &lt;View style={styles.userCard}>
+        &lt;Text style={styles.userName}>
+          {user.firstName} {user.lastName}
+        &lt;/Text>
+        &lt;Text style={styles.aboutUser}>
+          &lt;Text style={styles.aboutUserLabel}>Email:&lt;/Text> {userCred.email}
+        &lt;/Text>
+        &lt;Text style={styles.aboutUser}>
+          &lt;Text style={styles.aboutUserLabel}>Age:&lt;/Text> {user.age}
+        &lt;/Text>
+        &lt;Text style={styles.aboutUser}>
+          &lt;Text style={styles.aboutUserLabel}>Current Weight:&lt;/Text>{" "}
+          {user.currentWeight}
+        &lt;/Text>
+        &lt;Text style={styles.aboutUser}>
+          &lt;Text style={styles.aboutUserLabel}>Goal Weight:&lt;/Text>{" "}
+          {user.goalWeight}
+        &lt;/Text>
+        &lt;Text style={styles.aboutUser}>
+          &lt;Text style={styles.aboutUserLabel}>Daily Calorie Allowance:&lt;/Text>{" "}
+          {user.calorieLimit}
+        &lt;/Text>
+      &lt;/View>
+
+      &lt;View style={styles.userBtnWrapper}>
+        &lt;TouchableOpacity
+          style={styles.userBtn}
+          onPress={() => {
+            navigation.navigate("EditUser", {
+              email: userCred.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+            });
+          }}
+        >
+          &lt;Text style={styles.userBtnTxt}>Edit Profile&lt;/Text>
+        &lt;/TouchableOpacity>
+        {user.role === "trainer" &amp;&amp; (
+          &lt;TouchableOpacity
+            style={styles.userBtn}
+            onPress={ManageClientsScreen}
+          >
+            &lt;Text style={styles.userBtnTxt}>Manage Clients&lt;/Text>
+          &lt;/TouchableOpacity>
+        )}
+        &lt;TouchableOpacity style={styles.userBtn} onPress={handleSignOut}>
+          &lt;Text style={styles.userBtnTxt}>Sign Out&lt;/Text>
+        &lt;/TouchableOpacity>
+      &lt;/View>
+    &lt;/SafeAreaView>
+  );
+};
+
+export default ProfileScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 15,
+  },
+  button: {
+    backgroundColor: "#0792F9",
+    width: "100%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  delete: {
+    position: "absolute",
+    top: 0,
+    right: 8,
+  },
+  userImg: {
+    height: 150,
+    width: 150,
+    borderRadius: 75,
+  },
+  userCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    padding: 25,
+    marginTop: 20,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  aboutUser: {
+    flexDirection: "row",
+    fontSize: 14,
+    marginBottom: 12,
+  },
+  aboutUserLabel: {
+    fontWeight: "bold",
+  },
+  userBtnWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
+    width: "100%",
+    marginBottom: 10,
+  },
+  userBtn: {
+    borderColor: "#0792F9",
+    borderWidth: 2,
+    borderRadius: 3,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginHorizontal: 5,
+  },
+  userBtnTxt: {
+    color: "#0792F9",
+  },
+  userInfoWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    marginVertical: 20,
+  },
+  userInfoItem: {
+    justifyContent: "center",
+  },
+  userInfoTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+  userInfoSubTitle: {
+    fontSize: 12,
+    color: "#666",
+    textAlign: "center",
+  },
+  userImg: {
+    height: 150,
+    width: 150,
+    borderRadius: 75,
+    marginBottom: 20,
+  },
+
+  editBtn: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    backgroundColor: "#0792F9",
+    borderRadius: 50,
+    width: 35,
+    height: 35,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddClientsScreen">AddClientsScreen</a></li><li><a href="global.html#AddNutritionScreen">AddNutritionScreen</a></li><li><a href="global.html#AddWorkoutScreen">AddWorkoutScreen</a></li><li><a href="global.html#AllNutritionScreen">AllNutritionScreen</a></li><li><a href="global.html#AllWorkoutScreen">AllWorkoutScreen</a></li><li><a href="global.html#AnalyticsScreen">AnalyticsScreen</a></li><li><a href="global.html#AssignedWorkoutScreen">AssignedWorkoutScreen</a></li><li><a href="global.html#CreatedExerciseScreen">CreatedExerciseScreen</a></li><li><a href="global.html#CreatedNutritionScreen">CreatedNutritionScreen</a></li><li><a href="global.html#CreatedWorkout">CreatedWorkout</a></li><li><a href="global.html#EditNutritionScreen">EditNutritionScreen</a></li><li><a href="global.html#EditUserScreen">EditUserScreen</a></li><li><a href="global.html#ForgotPasswordScreen">ForgotPasswordScreen</a></li><li><a href="global.html#FormOne">FormOne</a></li><li><a href="global.html#HomeExerciseScreen">HomeExerciseScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#HomeWorkoutScreen">HomeWorkoutScreen</a></li><li><a href="global.html#JumpingJacks">JumpingJacks</a></li><li><a href="global.html#LoginScreen">LoginScreen</a></li><li><a href="global.html#ManageClientsScreen">ManageClientsScreen</a></li><li><a href="global.html#NutritionScreen">NutritionScreen</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegisterScreen">RegisterScreen</a></li><li><a href="global.html#TeamScreen">TeamScreen</a></li><li><a href="global.html#WeightHistoryScreen">WeightHistoryScreen</a></li><li><a href="global.html#WorkoutScreen">WorkoutScreen</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 05 2023 15:09:48 GMT+0100 (Irish Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

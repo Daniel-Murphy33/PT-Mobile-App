@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/loggedIn/NutritionTab/NutritionScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/loggedIn/NutritionTab/NutritionScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * NutritionScreen.js
+ * @author Daniel Murphy
+ * @studentnumber C00247818
+ * @license GNU Affero General Public License v3.0
+ */
+
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { getAuth } from "firebase/auth";
+import { collection, db, doc } from "../../../firebase";
+import { getDoc, getDocs, limit, orderBy, query } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import RecentNutritionCard from "../../../components/RecentNutritionCards";
+
+/**
+ * Nutrition tab screen 
+ * @returns {React.Component}
+ */ 
+
+const NutritionScreen = () => {
+  const navigation = useNavigation();
+  const user = getAuth().currentUser;
+  const [userData, setUserData] = useState("");
+  const uid = getAuth().currentUser.uid;
+
+  // getting from firestore
+  const GetNutrition = async () => {
+    // get user
+    if (user) {
+      const docRef = doc(db, "users", user.uid);
+      const colRef = collection(docRef, "nutrition");
+      const q = await query(colRef, orderBy("createdAt", "desc"), limit(3));
+
+      const sub = await getDocs(q);
+      sub.forEach((subs) => {
+        console.log("Hello", subs.data());
+      });
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    const userRef = doc(db, "users", uid);
+    const userSnapshot = await getDoc(userRef);
+    await setUserData(userSnapshot.data());
+  };
+
+  useEffect(() => {
+    GetNutrition();
+    fetchUserProfile();
+  }, []);
+
+  return (
+    &lt;SafeAreaView style={styles.container}>
+      &lt;View>
+        &lt;Text style={styles.title}>Create a Meal Plan&lt;/Text>
+        &lt;MaterialIcons
+          style={styles.icon}
+          name="food-bank"
+          size={45}
+          color="#0792F9"
+        />
+        &lt;Text style={styles.subTitle}>Add a Meal Plan&lt;/Text>
+        &lt;TouchableOpacity
+          style={styles.createWorkoutBtn}
+          onPress={() => navigation.navigate("AddNutrition")}
+        >
+          &lt;Text style={styles.btnText}>Create Meal Plan&lt;/Text>
+        &lt;/TouchableOpacity>
+        &lt;TouchableOpacity
+          style={styles.ViewWorkoutBtn}
+          onPress={() => navigation.navigate("AllNutrition")}
+        >
+          &lt;Text style={styles.btnText}>View Created Plans&lt;/Text>
+        &lt;/TouchableOpacity>
+        {userData.role === "client" &amp;&amp; (
+          &lt;TouchableOpacity
+            style={styles.ViewWorkoutBtn}
+            onPress={() => navigation.navigate("AssignedNutrition")}
+          >
+            &lt;Text style={styles.btnText}>View Assigned Plans&lt;/Text>
+          &lt;/TouchableOpacity>
+        )}
+      &lt;/View>
+      &lt;View style={{ flex: 1, marginTop: 60 }}>
+        &lt;RecentNutritionCard style={styles.card} />
+      &lt;/View>
+    &lt;/SafeAreaView>
+  );
+};
+
+export default NutritionScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#FFF",
+    flex: 1,
+    marginTop: 45,
+    height: "90%",
+  },
+  title: {
+    textAlign: "left",
+    fontSize: 28,
+    fontWeight: "bold",
+    top: 45,
+    left: 25,
+  },
+  subTitle: {
+    textAlign: "left",
+    fontSize: 20,
+    marginTop: 20,
+    marginLeft: 25,
+  },
+  icon: {
+    alignSelf: "center",
+    marginLeft: 240,
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  createWorkoutBtn: {
+    alignSelf: "center",
+    marginTop: 40,
+    backgroundColor: "#0792F9",
+    width: "80%",
+    height: 30,
+    borderRadius: 20,
+  },
+  ViewWorkoutBtn: {
+    alignSelf: "center",
+    marginTop: 30,
+    backgroundColor: "#0792F9",
+    width: "80%",
+    height: 30,
+    borderRadius: 20,
+    margin: 20,
+  },
+  btnText: {
+    textAlign: "center",
+    fontSize: 20,
+    color: "white",
+  },
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddClientsScreen">AddClientsScreen</a></li><li><a href="global.html#AddNutritionScreen">AddNutritionScreen</a></li><li><a href="global.html#AddWorkoutScreen">AddWorkoutScreen</a></li><li><a href="global.html#AllNutritionScreen">AllNutritionScreen</a></li><li><a href="global.html#AllWorkoutScreen">AllWorkoutScreen</a></li><li><a href="global.html#AnalyticsScreen">AnalyticsScreen</a></li><li><a href="global.html#AssignedWorkoutScreen">AssignedWorkoutScreen</a></li><li><a href="global.html#CreatedExerciseScreen">CreatedExerciseScreen</a></li><li><a href="global.html#CreatedNutritionScreen">CreatedNutritionScreen</a></li><li><a href="global.html#CreatedWorkout">CreatedWorkout</a></li><li><a href="global.html#EditNutritionScreen">EditNutritionScreen</a></li><li><a href="global.html#EditUserScreen">EditUserScreen</a></li><li><a href="global.html#ForgotPasswordScreen">ForgotPasswordScreen</a></li><li><a href="global.html#FormOne">FormOne</a></li><li><a href="global.html#HomeExerciseScreen">HomeExerciseScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#HomeWorkoutScreen">HomeWorkoutScreen</a></li><li><a href="global.html#JumpingJacks">JumpingJacks</a></li><li><a href="global.html#LoginScreen">LoginScreen</a></li><li><a href="global.html#ManageClientsScreen">ManageClientsScreen</a></li><li><a href="global.html#NutritionScreen">NutritionScreen</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegisterScreen">RegisterScreen</a></li><li><a href="global.html#TeamScreen">TeamScreen</a></li><li><a href="global.html#WeightHistoryScreen">WeightHistoryScreen</a></li><li><a href="global.html#WorkoutScreen">WorkoutScreen</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 05 2023 15:09:48 GMT+0100 (Irish Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
