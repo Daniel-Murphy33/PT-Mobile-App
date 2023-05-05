@@ -64,6 +64,8 @@ export default function App() {
     })
   }, [])
 
+
+  // Function to create the bottom tabs with icons
   function HomeTabs () {
     return (
     <Tab.Navigator
@@ -120,7 +122,7 @@ export default function App() {
           </Tab.Navigator>
   )}
   
-
+    // Screens for account type trainer
     if(isLoggedIn==true) {
       if(userData.role == "trainer")
       {
@@ -211,6 +213,7 @@ export default function App() {
         </NavigationContainer>
       )
       }
+      // Screens for account type General User
       else {
         return (
           <NavigationContainer>
@@ -298,7 +301,7 @@ export default function App() {
       }
       
     }
-    
+    // show logged out screens
     else {
       return (
         <NavigationContainer>

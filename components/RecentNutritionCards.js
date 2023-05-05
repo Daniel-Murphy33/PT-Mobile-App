@@ -55,7 +55,7 @@ const renderRightActions = (progress, dragX, item) => {
   );
 };
 
-const RecentWorkoutCard = () => {
+const RecentNutritionCard = () => {
   const user = getAuth().currentUser;
   const [nutrition, setNutrition] = useState([]);
   const navigation = useNavigation();
@@ -135,7 +135,7 @@ const RecentWorkoutCard = () => {
   )};
   
 
-export default RecentWorkoutCard;
+export default RecentNutritionCard;
 
 const styles = StyleSheet.create({
   container: {

@@ -34,10 +34,7 @@ const renderRightActions = (progress, dragX, item) => {
   return (
     <TouchableOpacity
       style={styles.deleteBtn}
-      onPress={() => {
-        const docRef = doc(db, "users", user.uid, "nutrition", item.key);
-        deleteDoc(docRef);
-      }}
+      onPress={() => DeleteNutrition(item)}
     >
       <Ionicons name="trash-bin" size={40} color="red" />
       <Animated.Text
@@ -54,7 +51,7 @@ const renderRightActions = (progress, dragX, item) => {
   );
 };
 
-const DeleteUser = (item) => {
+const DeleteNutrition = (item) => {
   const user = getAuth().currentUser;
 
   Alert.alert(

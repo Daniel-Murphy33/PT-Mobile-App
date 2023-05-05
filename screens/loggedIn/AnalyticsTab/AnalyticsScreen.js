@@ -69,6 +69,8 @@ const AnalyticsScreen = () => {
     return unsubscribe;
   };
 
+
+  // GetTodays nutrition items
   const today = new Date();
   const todayNutrition = nutritionData.find((item) => {
     if (!item.createdAt) {
@@ -82,6 +84,7 @@ const AnalyticsScreen = () => {
     );
   });
 
+  // get completed workouts
   const completedWorkouts = workoutsData.filter(
     (workout) => workout.isCompleted
   ).length;
@@ -102,6 +105,7 @@ const AnalyticsScreen = () => {
     return unsubscribe;
   };
 
+  // Calculate nutrition totals
   const calculateTotals = (nutrition) => {
     let totalCalories = 0;
     let totalFat = 0;
@@ -120,6 +124,7 @@ const AnalyticsScreen = () => {
     };
   };
 
+  // Parse string to number 
   const calorieLimit = user && user.calorieLimit ? parseFloat(user.calorieLimit) : 0;
 
   const todayNutritionTotals = todayNutrition
@@ -143,6 +148,7 @@ const AnalyticsScreen = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Weight Progress</Text>
       <View style={styles.chartContainer}>
+        {/* This is the chart for displaying weight data */}
         {weightsData.length < 2 ? (
           <Text style={styles.message}>Enter more weights to see progress</Text>
         ) : (
@@ -229,6 +235,7 @@ const AnalyticsScreen = () => {
       </View>
       <View style={styles.nutritionCard}>
         <Text style={styles.nutritionCardTitle}>Today's Nutrition</Text>
+        {/* This is the chart for displaying daily nutrition stats */}
         {todayNutritionTotals ? (
           <>
             <View style={styles.caloriesContainer}>
