@@ -47,7 +47,7 @@ const EditNutritionScreen = ({ route, navigation }) => {
           meals: newMeals,
           createdAt: serverTimestamp(),
         });
-        console.log("Updated successfully");
+        // console.log("Updated successfully");
         navigation.goBack();
       }
     } catch (error) {

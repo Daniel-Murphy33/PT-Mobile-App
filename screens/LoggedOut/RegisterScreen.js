@@ -70,13 +70,13 @@ const handleSignUp = async () => {
     .createUserWithEmailAndPassword(email, password)
     .then(async (UserCredentials) => {
       const user = UserCredentials.user;
-      console.log("Registered with: ", user.email);
+      // console.log("Registered with: ", user.email);
       try {
         const uidRef = doc(db, "users", user.uid);
         updateProfile(auth.currentUser, {
           displayName: firstName 
         }).then(() => {
-          console.log("Display name updated");
+          // console.log("Display name updated");
         }).catch((error) => {
           console.log(error)
         });

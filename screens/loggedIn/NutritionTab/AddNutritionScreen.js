@@ -76,7 +76,7 @@ const AddNutritionScreen = () => {
       setMealPlanName("");
       setMeals([{ name: "" }]);
       setNotes("");
-      console.log(meals);
+      // console.log(meals);
     }
     navigation.goBack();
   };

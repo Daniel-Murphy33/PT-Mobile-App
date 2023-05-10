@@ -25,7 +25,7 @@ import { useNavigation } from "@react-navigation/native";
 const CreatedNutritionScreen = ({ route }) => {
   const { date, notes, meals, id, name } = route.params;
   const navigation = useNavigation();
-  console.log(id);
+  // console.log(id);
 
   return (
     <ScrollView style={styles.container}>

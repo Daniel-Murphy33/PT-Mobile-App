@@ -87,7 +87,7 @@ const AssignedWorkoutCards = () => {
         let newWorkouts = [];
         snapshot.docs.forEach((doc) => {
           const workoutData = doc.data();
-          console.log("Fetched workout data:", workoutData);
+          // console.log("Fetched workout data:", workoutData);
   
           const clientsArray = workoutData.clients || [];
           if (
@@ -98,7 +98,7 @@ const AssignedWorkoutCards = () => {
           }
         });
         setWorkouts(newWorkouts);
-        console.log("Filtered workouts:", newWorkouts);
+        // console.log("Filtered workouts:", newWorkouts);
       });
       return () => subscriber();
     }

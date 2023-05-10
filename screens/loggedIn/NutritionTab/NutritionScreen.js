@@ -41,7 +41,7 @@ const NutritionScreen = () => {
 
       const sub = await getDocs(q);
       sub.forEach((subs) => {
-        console.log("Hello", subs.data());
+        // console.log("Hello", subs.data());
       });
     }
   };

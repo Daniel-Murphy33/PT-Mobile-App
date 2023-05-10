@@ -50,7 +50,7 @@ const EditWorkoutScreen = ({ route, navigation }) => {
           exercises: newExercises,
           createdAt: serverTimestamp(),
         });
-        console.log("Updated successfully");
+        // console.log("Updated successfully");
         navigation.goBack();
       }
     } catch (error) {

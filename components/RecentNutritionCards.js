@@ -80,7 +80,7 @@ const RecentNutritionCard = () => {
           newNutrition.push({ ...doc.data(), key: doc.id });
         });
         setNutrition(newNutrition);
-        console.log(nutrition);
+        // console.log(nutrition);
       });
       return () => subscriber();
     }

@@ -25,7 +25,7 @@ const ForgotPasswordScreen = () => {
   /** Function to reset password */
   const ForgotPassword = () => {
 
-    console.log("reset email sent to " + email);
+    // console.log("reset email sent to " + email);
     auth.sendPasswordResetEmail(email)
       .then(() => {
         alert("Reset password sent to : " + email);

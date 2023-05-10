@@ -50,7 +50,7 @@ const EditUserScreen = () => {
         weight: newCurrentWeight,
       };
       await setDoc(doc(db, `users/${userCred.uid}/weights`, weightEntry.date.toISOString()), weightEntry);
-      console.log("Weight entry added");
+      // console.log("Weight entry added");
     } catch (error) {
       console.error("Error adding weight entry: ", error);
     }

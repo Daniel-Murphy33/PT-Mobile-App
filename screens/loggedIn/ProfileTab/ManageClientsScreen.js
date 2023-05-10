@@ -52,7 +52,7 @@ const ManageClientsScreen = () => {
           newClients.push({ ...doc.data(), key: doc.id });
         });
         setClients(newClients);
-        console.log(newClients);
+        // console.log(newClients);
       });
       return () => subscriber();
     }
@@ -69,7 +69,7 @@ const ManageClientsScreen = () => {
           newTeams.push({ ...doc.data(), key: doc.id });
         });
         setTeams(newTeams);
-        console.log(newTeams);
+        // console.log(newTeams);
       });
       return () => subscriber();
     }

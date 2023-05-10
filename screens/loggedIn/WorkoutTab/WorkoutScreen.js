@@ -48,7 +48,7 @@ const WorkoutScreen = () => {
 
       const sub = await getDocs(q);
       sub.forEach((subs) => {
-        console.log(subs.data());
+        // console.log(subs.data());
       });
     }
   };

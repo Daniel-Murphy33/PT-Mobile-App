@@ -61,7 +61,6 @@ export default function App() {
           const userRef = doc(db, 'users',uid); 
           const userSnapshot = await getDoc(userRef);
           await setUserData(userSnapshot.data());
-          console.log(userData);
       }
       fetchUserProfile();
       }

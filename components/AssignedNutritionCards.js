@@ -89,7 +89,7 @@ const AssignedNutritionCards = () => {
         let newNutrition = [];
         snapshot.docs.forEach((doc) => {
           const nutritionData = doc.data();
-          console.log("Fetched nutrition data:", nutritionData);
+          // console.log("Fetched nutrition data:", nutritionData);
   
           const clientsArray = nutritionData.clients || [];
           if (
@@ -100,7 +100,7 @@ const AssignedNutritionCards = () => {
           }
         });
         setNutrition(newNutrition);
-        console.log("Filtered nutrition:", newNutrition);
+        // console.log("Filtered nutrition:", newNutrition);
       });
       return () => subscriber();
     }

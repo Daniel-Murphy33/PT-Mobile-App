@@ -56,10 +56,10 @@ const ProfileScreen = () => {
           onPress: () => {
             deleteUser(userCred)
               .then(() => {
-                console.log("Deleted", userCred);
+                // console.log("Deleted", userCred);
               })
               .catch((error) => {
-                console.log("error:", error);
+                // console.log("error:", error);
               });
           },
         },

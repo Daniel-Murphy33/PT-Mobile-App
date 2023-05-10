@@ -82,7 +82,7 @@ const RecentWorkoutCard = () => {
           newWorkouts.push({ ...doc.data(), key: doc.id });
         });
         setWorkouts(newWorkouts);
-        console.log(newWorkouts);
+        // console.log(newWorkouts);
       });
       return () => subscriber();
     }

@@ -18,7 +18,7 @@ const JumpingJacks = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const exercise = route.params
-  console.log(exercise);
+  // console.log(exercise);
 
   return (
     <SafeAreaView>
