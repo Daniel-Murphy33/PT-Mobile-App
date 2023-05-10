@@ -9,7 +9,7 @@
 3. **Student Number:** C00247818
 4. **Institution:** SETU Carlow
 5. **Date:** 10/05/23
-6. **Github Repository:** [Here]([actual URL to navigate](https://github.com/Daniel-Murphy33/PT-Mobile-App))
+6. **Github Repository:** ([Here](https://github.com/Daniel-Murphy33/PT-Mobile-App))
 
 6. **How to install & run project:**
    - Clone the repository
