@@ -21,3 +21,10 @@
    - **Node.js** - npm Package Manager
    - **VS Code** - Editor
    - **git** - For tracking and committing code
+
+7. **Additional Information:**
+   - All documents and additional files created for this project can be found in the Documents folder. 
+   - The **Attempted Machine Learning** folder contains the jupyter notebook in which the failed trained model is.
+   - The **Generated Documents** folder contains documentation automatically created using JSDoc.
+   - The **Written Documents** folder contains the documents created by me detailing different aspects of the project.
+   - The FitnessBro.aab file is an Android App Bundle. The AAB file contains the entire program code of the app and can be downloaded for use on Android Devices.
